@@ -1,0 +1,1967 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage-filtered.info - /Library/Developer/CommandLineTools/usr/include/c++/v1/atomic</title>
+  <link rel="stylesheet" type="text/css" href="../../../../../../../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../../../../../../../index.html">top level</a> - <a href="index.html">Library/Developer/CommandLineTools/usr/include/c++/v1</a> - atomic<span style="font-size: 80%;"> (source / <a href="atomic.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage-filtered.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">9</td>
+            <td class="headerCovTableEntryLo">55.6 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-11-06 22:00:02</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">5</td>
+            <td class="headerCovTableEntry">10</td>
+            <td class="headerCovTableEntryLo">50.0 %</td>
+          </tr>
+          <tr><td><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : // -*- C++ -*-</a>
+<span class="lineNum">       2 </span>            : //===--------------------------- atomic -----------------------------------===//
+<span class="lineNum">       3 </span>            : //
+<span class="lineNum">       4 </span>            : //                     The LLVM Compiler Infrastructure
+<span class="lineNum">       5 </span>            : //
+<span class="lineNum">       6 </span>            : // This file is distributed under the University of Illinois Open Source
+<span class="lineNum">       7 </span>            : // License. See LICENSE.TXT for details.
+<span class="lineNum">       8 </span>            : //
+<span class="lineNum">       9 </span>            : //===----------------------------------------------------------------------===//
+<span class="lineNum">      10 </span>            : 
+<span class="lineNum">      11 </span>            : #ifndef _LIBCPP_ATOMIC
+<span class="lineNum">      12 </span>            : #define _LIBCPP_ATOMIC
+<span class="lineNum">      13 </span>            : 
+<span class="lineNum">      14 </span>            : /*
+<span class="lineNum">      15 </span>            :     atomic synopsis
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : namespace std
+<span class="lineNum">      18 </span>            : {
+<span class="lineNum">      19 </span>            : 
+<span class="lineNum">      20 </span>            : // feature test macro
+<span class="lineNum">      21 </span>            : 
+<span class="lineNum">      22 </span>            : #define __cpp_lib_atomic_is_always_lock_free // as specified by SG10
+<span class="lineNum">      23 </span>            : 
+<span class="lineNum">      24 </span>            : // order and consistency
+<span class="lineNum">      25 </span>            : 
+<span class="lineNum">      26 </span>            : typedef enum memory_order
+<span class="lineNum">      27 </span>            : {
+<span class="lineNum">      28 </span>            :     memory_order_relaxed,
+<span class="lineNum">      29 </span>            :     memory_order_consume,  // load-consume
+<span class="lineNum">      30 </span>            :     memory_order_acquire,  // load-acquire
+<span class="lineNum">      31 </span>            :     memory_order_release,  // store-release
+<span class="lineNum">      32 </span>            :     memory_order_acq_rel,  // store-release load-acquire
+<span class="lineNum">      33 </span>            :     memory_order_seq_cst   // store-release load-acquire
+<span class="lineNum">      34 </span>            : } memory_order;
+<span class="lineNum">      35 </span>            : 
+<span class="lineNum">      36 </span>            : template &lt;class T&gt; T kill_dependency(T y) noexcept;
+<span class="lineNum">      37 </span>            : 
+<span class="lineNum">      38 </span>            : // lock-free property
+<span class="lineNum">      39 </span>            : 
+<span class="lineNum">      40 </span>            : #define ATOMIC_BOOL_LOCK_FREE unspecified
+<span class="lineNum">      41 </span>            : #define ATOMIC_CHAR_LOCK_FREE unspecified
+<span class="lineNum">      42 </span>            : #define ATOMIC_CHAR16_T_LOCK_FREE unspecified
+<span class="lineNum">      43 </span>            : #define ATOMIC_CHAR32_T_LOCK_FREE unspecified
+<span class="lineNum">      44 </span>            : #define ATOMIC_WCHAR_T_LOCK_FREE unspecified
+<span class="lineNum">      45 </span>            : #define ATOMIC_SHORT_LOCK_FREE unspecified
+<span class="lineNum">      46 </span>            : #define ATOMIC_INT_LOCK_FREE unspecified
+<span class="lineNum">      47 </span>            : #define ATOMIC_LONG_LOCK_FREE unspecified
+<span class="lineNum">      48 </span>            : #define ATOMIC_LLONG_LOCK_FREE unspecified
+<span class="lineNum">      49 </span>            : #define ATOMIC_POINTER_LOCK_FREE unspecified
+<span class="lineNum">      50 </span>            : 
+<span class="lineNum">      51 </span>            : // flag type and operations
+<span class="lineNum">      52 </span>            : 
+<span class="lineNum">      53 </span>            : typedef struct atomic_flag
+<span class="lineNum">      54 </span>            : {
+<span class="lineNum">      55 </span>            :     bool test_and_set(memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">      56 </span>            :     bool test_and_set(memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">      57 </span>            :     void clear(memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">      58 </span>            :     void clear(memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">      59 </span>            :     atomic_flag()  noexcept = default;
+<span class="lineNum">      60 </span>            :     atomic_flag(const atomic_flag&amp;) = delete;
+<span class="lineNum">      61 </span>            :     atomic_flag&amp; operator=(const atomic_flag&amp;) = delete;
+<span class="lineNum">      62 </span>            :     atomic_flag&amp; operator=(const atomic_flag&amp;) volatile = delete;
+<span class="lineNum">      63 </span>            : } atomic_flag;
+<span class="lineNum">      64 </span>            : 
+<span class="lineNum">      65 </span>            : bool
+<span class="lineNum">      66 </span>            :     atomic_flag_test_and_set(volatile atomic_flag* obj) noexcept;
+<span class="lineNum">      67 </span>            : 
+<span class="lineNum">      68 </span>            : bool
+<span class="lineNum">      69 </span>            :     atomic_flag_test_and_set(atomic_flag* obj) noexcept;
+<span class="lineNum">      70 </span>            : 
+<span class="lineNum">      71 </span>            : bool
+<span class="lineNum">      72 </span>            :     atomic_flag_test_and_set_explicit(volatile atomic_flag* obj,
+<span class="lineNum">      73 </span>            :                                       memory_order m) noexcept;
+<span class="lineNum">      74 </span>            : 
+<span class="lineNum">      75 </span>            : bool
+<span class="lineNum">      76 </span>            :     atomic_flag_test_and_set_explicit(atomic_flag* obj, memory_order m) noexcept;
+<span class="lineNum">      77 </span>            : 
+<span class="lineNum">      78 </span>            : void
+<span class="lineNum">      79 </span>            :     atomic_flag_clear(volatile atomic_flag* obj) noexcept;
+<span class="lineNum">      80 </span>            : 
+<span class="lineNum">      81 </span>            : void
+<span class="lineNum">      82 </span>            :     atomic_flag_clear(atomic_flag* obj) noexcept;
+<span class="lineNum">      83 </span>            : 
+<span class="lineNum">      84 </span>            : void
+<span class="lineNum">      85 </span>            :     atomic_flag_clear_explicit(volatile atomic_flag* obj, memory_order m) noexcept;
+<span class="lineNum">      86 </span>            : 
+<span class="lineNum">      87 </span>            : void
+<span class="lineNum">      88 </span>            :     atomic_flag_clear_explicit(atomic_flag* obj, memory_order m) noexcept;
+<span class="lineNum">      89 </span>            : 
+<span class="lineNum">      90 </span>            : #define ATOMIC_FLAG_INIT see below
+<span class="lineNum">      91 </span>            : #define ATOMIC_VAR_INIT(value) see below
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            : template &lt;class T&gt;
+<span class="lineNum">      94 </span>            : struct atomic
+<span class="lineNum">      95 </span>            : {
+<span class="lineNum">      96 </span>            :     static constexpr bool is_always_lock_free;
+<span class="lineNum">      97 </span>            :     bool is_lock_free() const volatile noexcept;
+<span class="lineNum">      98 </span>            :     bool is_lock_free() const noexcept;
+<span class="lineNum">      99 </span>            :     void store(T desr, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     100 </span>            :     void store(T desr, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     101 </span>            :     T load(memory_order m = memory_order_seq_cst) const volatile noexcept;
+<span class="lineNum">     102 </span>            :     T load(memory_order m = memory_order_seq_cst) const noexcept;
+<span class="lineNum">     103 </span>            :     operator T() const volatile noexcept;
+<span class="lineNum">     104 </span>            :     operator T() const noexcept;
+<span class="lineNum">     105 </span>            :     T exchange(T desr, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     106 </span>            :     T exchange(T desr, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     107 </span>            :     bool compare_exchange_weak(T&amp; expc, T desr,
+<span class="lineNum">     108 </span>            :                                memory_order s, memory_order f) volatile noexcept;
+<span class="lineNum">     109 </span>            :     bool compare_exchange_weak(T&amp; expc, T desr, memory_order s, memory_order f) noexcept;
+<span class="lineNum">     110 </span>            :     bool compare_exchange_strong(T&amp; expc, T desr,
+<span class="lineNum">     111 </span>            :                                  memory_order s, memory_order f) volatile noexcept;
+<span class="lineNum">     112 </span>            :     bool compare_exchange_strong(T&amp; expc, T desr,
+<span class="lineNum">     113 </span>            :                                  memory_order s, memory_order f) noexcept;
+<span class="lineNum">     114 </span>            :     bool compare_exchange_weak(T&amp; expc, T desr,
+<span class="lineNum">     115 </span>            :                                memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     116 </span>            :     bool compare_exchange_weak(T&amp; expc, T desr,
+<span class="lineNum">     117 </span>            :                                memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     118 </span>            :     bool compare_exchange_strong(T&amp; expc, T desr,
+<span class="lineNum">     119 </span>            :                                 memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     120 </span>            :     bool compare_exchange_strong(T&amp; expc, T desr,
+<span class="lineNum">     121 </span>            :                                  memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     122 </span>            : 
+<span class="lineNum">     123 </span>            :     atomic() noexcept = default;
+<span class="lineNum">     124 </span>            :     constexpr atomic(T desr) noexcept;
+<span class="lineNum">     125 </span>            :     atomic(const atomic&amp;) = delete;
+<span class="lineNum">     126 </span>            :     atomic&amp; operator=(const atomic&amp;) = delete;
+<span class="lineNum">     127 </span>            :     atomic&amp; operator=(const atomic&amp;) volatile = delete;
+<span class="lineNum">     128 </span>            :     T operator=(T) volatile noexcept;
+<span class="lineNum">     129 </span>            :     T operator=(T) noexcept;
+<span class="lineNum">     130 </span>            : };
+<span class="lineNum">     131 </span>            : 
+<span class="lineNum">     132 </span>            : template &lt;&gt;
+<span class="lineNum">     133 </span>            : struct atomic&lt;integral&gt;
+<span class="lineNum">     134 </span>            : {
+<span class="lineNum">     135 </span>            :     static constexpr bool is_always_lock_free;
+<span class="lineNum">     136 </span>            :     bool is_lock_free() const volatile noexcept;
+<span class="lineNum">     137 </span>            :     bool is_lock_free() const noexcept;
+<span class="lineNum">     138 </span>            :     void store(integral desr, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     139 </span>            :     void store(integral desr, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     140 </span>            :     integral load(memory_order m = memory_order_seq_cst) const volatile noexcept;
+<span class="lineNum">     141 </span>            :     integral load(memory_order m = memory_order_seq_cst) const noexcept;
+<span class="lineNum">     142 </span>            :     operator integral() const volatile noexcept;
+<span class="lineNum">     143 </span>            :     operator integral() const noexcept;
+<span class="lineNum">     144 </span>            :     integral exchange(integral desr,
+<span class="lineNum">     145 </span>            :                       memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     146 </span>            :     integral exchange(integral desr, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     147 </span>            :     bool compare_exchange_weak(integral&amp; expc, integral desr,
+<span class="lineNum">     148 </span>            :                                memory_order s, memory_order f) volatile noexcept;
+<span class="lineNum">     149 </span>            :     bool compare_exchange_weak(integral&amp; expc, integral desr,
+<span class="lineNum">     150 </span>            :                                memory_order s, memory_order f) noexcept;
+<span class="lineNum">     151 </span>            :     bool compare_exchange_strong(integral&amp; expc, integral desr,
+<span class="lineNum">     152 </span>            :                                  memory_order s, memory_order f) volatile noexcept;
+<span class="lineNum">     153 </span>            :     bool compare_exchange_strong(integral&amp; expc, integral desr,
+<span class="lineNum">     154 </span>            :                                  memory_order s, memory_order f) noexcept;
+<span class="lineNum">     155 </span>            :     bool compare_exchange_weak(integral&amp; expc, integral desr,
+<span class="lineNum">     156 </span>            :                                memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     157 </span>            :     bool compare_exchange_weak(integral&amp; expc, integral desr,
+<span class="lineNum">     158 </span>            :                                memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     159 </span>            :     bool compare_exchange_strong(integral&amp; expc, integral desr,
+<span class="lineNum">     160 </span>            :                                 memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     161 </span>            :     bool compare_exchange_strong(integral&amp; expc, integral desr,
+<span class="lineNum">     162 </span>            :                                  memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     163 </span>            : 
+<span class="lineNum">     164 </span>            :     integral
+<span class="lineNum">     165 </span>            :         fetch_add(integral op, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     166 </span>            :     integral fetch_add(integral op, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     167 </span>            :     integral
+<span class="lineNum">     168 </span>            :         fetch_sub(integral op, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     169 </span>            :     integral fetch_sub(integral op, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     170 </span>            :     integral
+<span class="lineNum">     171 </span>            :         fetch_and(integral op, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     172 </span>            :     integral fetch_and(integral op, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     173 </span>            :     integral
+<span class="lineNum">     174 </span>            :         fetch_or(integral op, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     175 </span>            :     integral fetch_or(integral op, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     176 </span>            :     integral
+<span class="lineNum">     177 </span>            :         fetch_xor(integral op, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     178 </span>            :     integral fetch_xor(integral op, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     179 </span>            : 
+<span class="lineNum">     180 </span>            :     atomic() noexcept = default;
+<span class="lineNum">     181 </span>            :     constexpr atomic(integral desr) noexcept;
+<span class="lineNum">     182 </span>            :     atomic(const atomic&amp;) = delete;
+<span class="lineNum">     183 </span>            :     atomic&amp; operator=(const atomic&amp;) = delete;
+<span class="lineNum">     184 </span>            :     atomic&amp; operator=(const atomic&amp;) volatile = delete;
+<span class="lineNum">     185 </span>            :     integral operator=(integral desr) volatile noexcept;
+<span class="lineNum">     186 </span>            :     integral operator=(integral desr) noexcept;
+<span class="lineNum">     187 </span>            : 
+<span class="lineNum">     188 </span>            :     integral operator++(int) volatile noexcept;
+<span class="lineNum">     189 </span>            :     integral operator++(int) noexcept;
+<span class="lineNum">     190 </span>            :     integral operator--(int) volatile noexcept;
+<span class="lineNum">     191 </span>            :     integral operator--(int) noexcept;
+<span class="lineNum">     192 </span>            :     integral operator++() volatile noexcept;
+<span class="lineNum">     193 </span>            :     integral operator++() noexcept;
+<span class="lineNum">     194 </span>            :     integral operator--() volatile noexcept;
+<span class="lineNum">     195 </span>            :     integral operator--() noexcept;
+<span class="lineNum">     196 </span>            :     integral operator+=(integral op) volatile noexcept;
+<span class="lineNum">     197 </span>            :     integral operator+=(integral op) noexcept;
+<span class="lineNum">     198 </span>            :     integral operator-=(integral op) volatile noexcept;
+<span class="lineNum">     199 </span>            :     integral operator-=(integral op) noexcept;
+<span class="lineNum">     200 </span>            :     integral operator&amp;=(integral op) volatile noexcept;
+<span class="lineNum">     201 </span>            :     integral operator&amp;=(integral op) noexcept;
+<span class="lineNum">     202 </span>            :     integral operator|=(integral op) volatile noexcept;
+<span class="lineNum">     203 </span>            :     integral operator|=(integral op) noexcept;
+<span class="lineNum">     204 </span>            :     integral operator^=(integral op) volatile noexcept;
+<span class="lineNum">     205 </span>            :     integral operator^=(integral op) noexcept;
+<span class="lineNum">     206 </span>            : };
+<span class="lineNum">     207 </span>            : 
+<span class="lineNum">     208 </span>            : template &lt;class T&gt;
+<span class="lineNum">     209 </span>            : struct atomic&lt;T*&gt;
+<span class="lineNum">     210 </span>            : {
+<span class="lineNum">     211 </span>            :     static constexpr bool is_always_lock_free;
+<span class="lineNum">     212 </span>            :     bool is_lock_free() const volatile noexcept;
+<span class="lineNum">     213 </span>            :     bool is_lock_free() const noexcept;
+<span class="lineNum">     214 </span>            :     void store(T* desr, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     215 </span>            :     void store(T* desr, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     216 </span>            :     T* load(memory_order m = memory_order_seq_cst) const volatile noexcept;
+<span class="lineNum">     217 </span>            :     T* load(memory_order m = memory_order_seq_cst) const noexcept;
+<span class="lineNum">     218 </span>            :     operator T*() const volatile noexcept;
+<span class="lineNum">     219 </span>            :     operator T*() const noexcept;
+<span class="lineNum">     220 </span>            :     T* exchange(T* desr, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     221 </span>            :     T* exchange(T* desr, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     222 </span>            :     bool compare_exchange_weak(T*&amp; expc, T* desr,
+<span class="lineNum">     223 </span>            :                                memory_order s, memory_order f) volatile noexcept;
+<span class="lineNum">     224 </span>            :     bool compare_exchange_weak(T*&amp; expc, T* desr,
+<span class="lineNum">     225 </span>            :                                memory_order s, memory_order f) noexcept;
+<span class="lineNum">     226 </span>            :     bool compare_exchange_strong(T*&amp; expc, T* desr,
+<span class="lineNum">     227 </span>            :                                  memory_order s, memory_order f) volatile noexcept;
+<span class="lineNum">     228 </span>            :     bool compare_exchange_strong(T*&amp; expc, T* desr,
+<span class="lineNum">     229 </span>            :                                  memory_order s, memory_order f) noexcept;
+<span class="lineNum">     230 </span>            :     bool compare_exchange_weak(T*&amp; expc, T* desr,
+<span class="lineNum">     231 </span>            :                                memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     232 </span>            :     bool compare_exchange_weak(T*&amp; expc, T* desr,
+<span class="lineNum">     233 </span>            :                                memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     234 </span>            :     bool compare_exchange_strong(T*&amp; expc, T* desr,
+<span class="lineNum">     235 </span>            :                                 memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     236 </span>            :     bool compare_exchange_strong(T*&amp; expc, T* desr,
+<span class="lineNum">     237 </span>            :                                  memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     238 </span>            :     T* fetch_add(ptrdiff_t op, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     239 </span>            :     T* fetch_add(ptrdiff_t op, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     240 </span>            :     T* fetch_sub(ptrdiff_t op, memory_order m = memory_order_seq_cst) volatile noexcept;
+<span class="lineNum">     241 </span>            :     T* fetch_sub(ptrdiff_t op, memory_order m = memory_order_seq_cst) noexcept;
+<span class="lineNum">     242 </span>            : 
+<span class="lineNum">     243 </span>            :     atomic() noexcept = default;
+<span class="lineNum">     244 </span>            :     constexpr atomic(T* desr) noexcept;
+<span class="lineNum">     245 </span>            :     atomic(const atomic&amp;) = delete;
+<span class="lineNum">     246 </span>            :     atomic&amp; operator=(const atomic&amp;) = delete;
+<span class="lineNum">     247 </span>            :     atomic&amp; operator=(const atomic&amp;) volatile = delete;
+<span class="lineNum">     248 </span>            : 
+<span class="lineNum">     249 </span>            :     T* operator=(T*) volatile noexcept;
+<span class="lineNum">     250 </span>            :     T* operator=(T*) noexcept;
+<span class="lineNum">     251 </span>            :     T* operator++(int) volatile noexcept;
+<span class="lineNum">     252 </span>            :     T* operator++(int) noexcept;
+<span class="lineNum">     253 </span>            :     T* operator--(int) volatile noexcept;
+<span class="lineNum">     254 </span>            :     T* operator--(int) noexcept;
+<span class="lineNum">     255 </span>            :     T* operator++() volatile noexcept;
+<span class="lineNum">     256 </span>            :     T* operator++() noexcept;
+<span class="lineNum">     257 </span>            :     T* operator--() volatile noexcept;
+<span class="lineNum">     258 </span>            :     T* operator--() noexcept;
+<span class="lineNum">     259 </span>            :     T* operator+=(ptrdiff_t op) volatile noexcept;
+<span class="lineNum">     260 </span>            :     T* operator+=(ptrdiff_t op) noexcept;
+<span class="lineNum">     261 </span>            :     T* operator-=(ptrdiff_t op) volatile noexcept;
+<span class="lineNum">     262 </span>            :     T* operator-=(ptrdiff_t op) noexcept;
+<span class="lineNum">     263 </span>            : };
+<span class="lineNum">     264 </span>            : 
+<span class="lineNum">     265 </span>            : 
+<span class="lineNum">     266 </span>            : template &lt;class T&gt;
+<span class="lineNum">     267 </span>            :     bool
+<span class="lineNum">     268 </span>            :     atomic_is_lock_free(const volatile atomic&lt;T&gt;* obj) noexcept;
+<span class="lineNum">     269 </span>            : 
+<span class="lineNum">     270 </span>            : template &lt;class T&gt;
+<span class="lineNum">     271 </span>            :     bool
+<span class="lineNum">     272 </span>            :     atomic_is_lock_free(const atomic&lt;T&gt;* obj) noexcept;
+<span class="lineNum">     273 </span>            : 
+<span class="lineNum">     274 </span>            : template &lt;class T&gt;
+<span class="lineNum">     275 </span>            :     void
+<span class="lineNum">     276 </span>            :     atomic_init(volatile atomic&lt;T&gt;* obj, T desr) noexcept;
+<span class="lineNum">     277 </span>            : 
+<span class="lineNum">     278 </span>            : template &lt;class T&gt;
+<span class="lineNum">     279 </span>            :     void
+<span class="lineNum">     280 </span>            :     atomic_init(atomic&lt;T&gt;* obj, T desr) noexcept;
+<span class="lineNum">     281 </span>            : 
+<span class="lineNum">     282 </span>            : template &lt;class T&gt;
+<span class="lineNum">     283 </span>            :     void
+<span class="lineNum">     284 </span>            :     atomic_store(volatile atomic&lt;T&gt;* obj, T desr) noexcept;
+<span class="lineNum">     285 </span>            : 
+<span class="lineNum">     286 </span>            : template &lt;class T&gt;
+<span class="lineNum">     287 </span>            :     void
+<span class="lineNum">     288 </span>            :     atomic_store(atomic&lt;T&gt;* obj, T desr) noexcept;
+<span class="lineNum">     289 </span>            : 
+<span class="lineNum">     290 </span>            : template &lt;class T&gt;
+<span class="lineNum">     291 </span>            :     void
+<span class="lineNum">     292 </span>            :     atomic_store_explicit(volatile atomic&lt;T&gt;* obj, T desr, memory_order m) noexcept;
+<span class="lineNum">     293 </span>            : 
+<span class="lineNum">     294 </span>            : template &lt;class T&gt;
+<span class="lineNum">     295 </span>            :     void
+<span class="lineNum">     296 </span>            :     atomic_store_explicit(atomic&lt;T&gt;* obj, T desr, memory_order m) noexcept;
+<span class="lineNum">     297 </span>            : 
+<span class="lineNum">     298 </span>            : template &lt;class T&gt;
+<span class="lineNum">     299 </span>            :     T
+<span class="lineNum">     300 </span>            :     atomic_load(const volatile atomic&lt;T&gt;* obj) noexcept;
+<span class="lineNum">     301 </span>            : 
+<span class="lineNum">     302 </span>            : template &lt;class T&gt;
+<span class="lineNum">     303 </span>            :     T
+<span class="lineNum">     304 </span>            :     atomic_load(const atomic&lt;T&gt;* obj) noexcept;
+<span class="lineNum">     305 </span>            : 
+<span class="lineNum">     306 </span>            : template &lt;class T&gt;
+<span class="lineNum">     307 </span>            :     T
+<span class="lineNum">     308 </span>            :     atomic_load_explicit(const volatile atomic&lt;T&gt;* obj, memory_order m) noexcept;
+<span class="lineNum">     309 </span>            : 
+<span class="lineNum">     310 </span>            : template &lt;class T&gt;
+<span class="lineNum">     311 </span>            :     T
+<span class="lineNum">     312 </span>            :     atomic_load_explicit(const atomic&lt;T&gt;* obj, memory_order m) noexcept;
+<span class="lineNum">     313 </span>            : 
+<span class="lineNum">     314 </span>            : template &lt;class T&gt;
+<span class="lineNum">     315 </span>            :     T
+<span class="lineNum">     316 </span>            :     atomic_exchange(volatile atomic&lt;T&gt;* obj, T desr) noexcept;
+<span class="lineNum">     317 </span>            : 
+<span class="lineNum">     318 </span>            : template &lt;class T&gt;
+<span class="lineNum">     319 </span>            :     T
+<span class="lineNum">     320 </span>            :     atomic_exchange(atomic&lt;T&gt;* obj, T desr) noexcept;
+<span class="lineNum">     321 </span>            : 
+<span class="lineNum">     322 </span>            : template &lt;class T&gt;
+<span class="lineNum">     323 </span>            :     T
+<span class="lineNum">     324 </span>            :     atomic_exchange_explicit(volatile atomic&lt;T&gt;* obj, T desr, memory_order m) noexcept;
+<span class="lineNum">     325 </span>            : 
+<span class="lineNum">     326 </span>            : template &lt;class T&gt;
+<span class="lineNum">     327 </span>            :     T
+<span class="lineNum">     328 </span>            :     atomic_exchange_explicit(atomic&lt;T&gt;* obj, T desr, memory_order m) noexcept;
+<span class="lineNum">     329 </span>            : 
+<span class="lineNum">     330 </span>            : template &lt;class T&gt;
+<span class="lineNum">     331 </span>            :     bool
+<span class="lineNum">     332 </span>            :     atomic_compare_exchange_weak(volatile atomic&lt;T&gt;* obj, T* expc, T desr) noexcept;
+<span class="lineNum">     333 </span>            : 
+<span class="lineNum">     334 </span>            : template &lt;class T&gt;
+<span class="lineNum">     335 </span>            :     bool
+<span class="lineNum">     336 </span>            :     atomic_compare_exchange_weak(atomic&lt;T&gt;* obj, T* expc, T desr) noexcept;
+<span class="lineNum">     337 </span>            : 
+<span class="lineNum">     338 </span>            : template &lt;class T&gt;
+<span class="lineNum">     339 </span>            :     bool
+<span class="lineNum">     340 </span>            :     atomic_compare_exchange_strong(volatile atomic&lt;T&gt;* obj, T* expc, T desr) noexcept;
+<span class="lineNum">     341 </span>            : 
+<span class="lineNum">     342 </span>            : template &lt;class T&gt;
+<span class="lineNum">     343 </span>            :     bool
+<span class="lineNum">     344 </span>            :     atomic_compare_exchange_strong(atomic&lt;T&gt;* obj, T* expc, T desr) noexcept;
+<span class="lineNum">     345 </span>            : 
+<span class="lineNum">     346 </span>            : template &lt;class T&gt;
+<span class="lineNum">     347 </span>            :     bool
+<span class="lineNum">     348 </span>            :     atomic_compare_exchange_weak_explicit(volatile atomic&lt;T&gt;* obj, T* expc,
+<span class="lineNum">     349 </span>            :                                           T desr,
+<span class="lineNum">     350 </span>            :                                           memory_order s, memory_order f) noexcept;
+<span class="lineNum">     351 </span>            : 
+<span class="lineNum">     352 </span>            : template &lt;class T&gt;
+<span class="lineNum">     353 </span>            :     bool
+<span class="lineNum">     354 </span>            :     atomic_compare_exchange_weak_explicit(atomic&lt;T&gt;* obj, T* expc, T desr,
+<span class="lineNum">     355 </span>            :                                           memory_order s, memory_order f) noexcept;
+<span class="lineNum">     356 </span>            : 
+<span class="lineNum">     357 </span>            : template &lt;class T&gt;
+<span class="lineNum">     358 </span>            :     bool
+<span class="lineNum">     359 </span>            :     atomic_compare_exchange_strong_explicit(volatile atomic&lt;T&gt;* obj,
+<span class="lineNum">     360 </span>            :                                             T* expc, T desr,
+<span class="lineNum">     361 </span>            :                                             memory_order s, memory_order f) noexcept;
+<span class="lineNum">     362 </span>            : 
+<span class="lineNum">     363 </span>            : template &lt;class T&gt;
+<span class="lineNum">     364 </span>            :     bool
+<span class="lineNum">     365 </span>            :     atomic_compare_exchange_strong_explicit(atomic&lt;T&gt;* obj, T* expc,
+<span class="lineNum">     366 </span>            :                                             T desr,
+<span class="lineNum">     367 </span>            :                                             memory_order s, memory_order f) noexcept;
+<span class="lineNum">     368 </span>            : 
+<span class="lineNum">     369 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     370 </span>            :     Integral
+<span class="lineNum">     371 </span>            :     atomic_fetch_add(volatile atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     372 </span>            : 
+<span class="lineNum">     373 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     374 </span>            :     Integral
+<span class="lineNum">     375 </span>            :     atomic_fetch_add(atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     376 </span>            : 
+<span class="lineNum">     377 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     378 </span>            :     Integral
+<span class="lineNum">     379 </span>            :     atomic_fetch_add_explicit(volatile atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     380 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     381 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     382 </span>            :     Integral
+<span class="lineNum">     383 </span>            :     atomic_fetch_add_explicit(atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     384 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     385 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     386 </span>            :     Integral
+<span class="lineNum">     387 </span>            :     atomic_fetch_sub(volatile atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     388 </span>            : 
+<span class="lineNum">     389 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     390 </span>            :     Integral
+<span class="lineNum">     391 </span>            :     atomic_fetch_sub(atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     392 </span>            : 
+<span class="lineNum">     393 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     394 </span>            :     Integral
+<span class="lineNum">     395 </span>            :     atomic_fetch_sub_explicit(volatile atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     396 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     397 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     398 </span>            :     Integral
+<span class="lineNum">     399 </span>            :     atomic_fetch_sub_explicit(atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     400 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     401 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     402 </span>            :     Integral
+<span class="lineNum">     403 </span>            :     atomic_fetch_and(volatile atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     404 </span>            : 
+<span class="lineNum">     405 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     406 </span>            :     Integral
+<span class="lineNum">     407 </span>            :     atomic_fetch_and(atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     408 </span>            : 
+<span class="lineNum">     409 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     410 </span>            :     Integral
+<span class="lineNum">     411 </span>            :     atomic_fetch_and_explicit(volatile atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     412 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     413 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     414 </span>            :     Integral
+<span class="lineNum">     415 </span>            :     atomic_fetch_and_explicit(atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     416 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     417 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     418 </span>            :     Integral
+<span class="lineNum">     419 </span>            :     atomic_fetch_or(volatile atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     420 </span>            : 
+<span class="lineNum">     421 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     422 </span>            :     Integral
+<span class="lineNum">     423 </span>            :     atomic_fetch_or(atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     424 </span>            : 
+<span class="lineNum">     425 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     426 </span>            :     Integral
+<span class="lineNum">     427 </span>            :     atomic_fetch_or_explicit(volatile atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     428 </span>            :                              memory_order m) noexcept;
+<span class="lineNum">     429 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     430 </span>            :     Integral
+<span class="lineNum">     431 </span>            :     atomic_fetch_or_explicit(atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     432 </span>            :                              memory_order m) noexcept;
+<span class="lineNum">     433 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     434 </span>            :     Integral
+<span class="lineNum">     435 </span>            :     atomic_fetch_xor(volatile atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     436 </span>            : 
+<span class="lineNum">     437 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     438 </span>            :     Integral
+<span class="lineNum">     439 </span>            :     atomic_fetch_xor(atomic&lt;Integral&gt;* obj, Integral op) noexcept;
+<span class="lineNum">     440 </span>            : 
+<span class="lineNum">     441 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     442 </span>            :     Integral
+<span class="lineNum">     443 </span>            :     atomic_fetch_xor_explicit(volatile atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     444 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     445 </span>            : template &lt;class Integral&gt;
+<span class="lineNum">     446 </span>            :     Integral
+<span class="lineNum">     447 </span>            :     atomic_fetch_xor_explicit(atomic&lt;Integral&gt;* obj, Integral op,
+<span class="lineNum">     448 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     449 </span>            : 
+<span class="lineNum">     450 </span>            : template &lt;class T&gt;
+<span class="lineNum">     451 </span>            :     T*
+<span class="lineNum">     452 </span>            :     atomic_fetch_add(volatile atomic&lt;T*&gt;* obj, ptrdiff_t op) noexcept;
+<span class="lineNum">     453 </span>            : 
+<span class="lineNum">     454 </span>            : template &lt;class T&gt;
+<span class="lineNum">     455 </span>            :     T*
+<span class="lineNum">     456 </span>            :     atomic_fetch_add(atomic&lt;T*&gt;* obj, ptrdiff_t op) noexcept;
+<span class="lineNum">     457 </span>            : 
+<span class="lineNum">     458 </span>            : template &lt;class T&gt;
+<span class="lineNum">     459 </span>            :     T*
+<span class="lineNum">     460 </span>            :     atomic_fetch_add_explicit(volatile atomic&lt;T*&gt;* obj, ptrdiff_t op,
+<span class="lineNum">     461 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     462 </span>            : template &lt;class T&gt;
+<span class="lineNum">     463 </span>            :     T*
+<span class="lineNum">     464 </span>            :     atomic_fetch_add_explicit(atomic&lt;T*&gt;* obj, ptrdiff_t op, memory_order m) noexcept;
+<span class="lineNum">     465 </span>            : 
+<span class="lineNum">     466 </span>            : template &lt;class T&gt;
+<span class="lineNum">     467 </span>            :     T*
+<span class="lineNum">     468 </span>            :     atomic_fetch_sub(volatile atomic&lt;T*&gt;* obj, ptrdiff_t op) noexcept;
+<span class="lineNum">     469 </span>            : 
+<span class="lineNum">     470 </span>            : template &lt;class T&gt;
+<span class="lineNum">     471 </span>            :     T*
+<span class="lineNum">     472 </span>            :     atomic_fetch_sub(atomic&lt;T*&gt;* obj, ptrdiff_t op) noexcept;
+<span class="lineNum">     473 </span>            : 
+<span class="lineNum">     474 </span>            : template &lt;class T&gt;
+<span class="lineNum">     475 </span>            :     T*
+<span class="lineNum">     476 </span>            :     atomic_fetch_sub_explicit(volatile atomic&lt;T*&gt;* obj, ptrdiff_t op,
+<span class="lineNum">     477 </span>            :                               memory_order m) noexcept;
+<span class="lineNum">     478 </span>            : template &lt;class T&gt;
+<span class="lineNum">     479 </span>            :     T*
+<span class="lineNum">     480 </span>            :     atomic_fetch_sub_explicit(atomic&lt;T*&gt;* obj, ptrdiff_t op, memory_order m) noexcept;
+<span class="lineNum">     481 </span>            : 
+<span class="lineNum">     482 </span>            : // Atomics for standard typedef types
+<span class="lineNum">     483 </span>            : 
+<span class="lineNum">     484 </span>            : typedef atomic&lt;bool&gt;               atomic_bool;
+<span class="lineNum">     485 </span>            : typedef atomic&lt;char&gt;               atomic_char;
+<span class="lineNum">     486 </span>            : typedef atomic&lt;signed char&gt;        atomic_schar;
+<span class="lineNum">     487 </span>            : typedef atomic&lt;unsigned char&gt;      atomic_uchar;
+<span class="lineNum">     488 </span>            : typedef atomic&lt;short&gt;              atomic_short;
+<span class="lineNum">     489 </span>            : typedef atomic&lt;unsigned short&gt;     atomic_ushort;
+<span class="lineNum">     490 </span>            : typedef atomic&lt;int&gt;                atomic_int;
+<span class="lineNum">     491 </span>            : typedef atomic&lt;unsigned int&gt;       atomic_uint;
+<span class="lineNum">     492 </span>            : typedef atomic&lt;long&gt;               atomic_long;
+<span class="lineNum">     493 </span>            : typedef atomic&lt;unsigned long&gt;      atomic_ulong;
+<span class="lineNum">     494 </span>            : typedef atomic&lt;long long&gt;          atomic_llong;
+<span class="lineNum">     495 </span>            : typedef atomic&lt;unsigned long long&gt; atomic_ullong;
+<span class="lineNum">     496 </span>            : typedef atomic&lt;char16_t&gt;           atomic_char16_t;
+<span class="lineNum">     497 </span>            : typedef atomic&lt;char32_t&gt;           atomic_char32_t;
+<span class="lineNum">     498 </span>            : typedef atomic&lt;wchar_t&gt;            atomic_wchar_t;
+<span class="lineNum">     499 </span>            : 
+<span class="lineNum">     500 </span>            : typedef atomic&lt;int_least8_t&gt;   atomic_int_least8_t;
+<span class="lineNum">     501 </span>            : typedef atomic&lt;uint_least8_t&gt;  atomic_uint_least8_t;
+<span class="lineNum">     502 </span>            : typedef atomic&lt;int_least16_t&gt;  atomic_int_least16_t;
+<span class="lineNum">     503 </span>            : typedef atomic&lt;uint_least16_t&gt; atomic_uint_least16_t;
+<span class="lineNum">     504 </span>            : typedef atomic&lt;int_least32_t&gt;  atomic_int_least32_t;
+<span class="lineNum">     505 </span>            : typedef atomic&lt;uint_least32_t&gt; atomic_uint_least32_t;
+<span class="lineNum">     506 </span>            : typedef atomic&lt;int_least64_t&gt;  atomic_int_least64_t;
+<span class="lineNum">     507 </span>            : typedef atomic&lt;uint_least64_t&gt; atomic_uint_least64_t;
+<span class="lineNum">     508 </span>            : 
+<span class="lineNum">     509 </span>            : typedef atomic&lt;int_fast8_t&gt;   atomic_int_fast8_t;
+<span class="lineNum">     510 </span>            : typedef atomic&lt;uint_fast8_t&gt;  atomic_uint_fast8_t;
+<span class="lineNum">     511 </span>            : typedef atomic&lt;int_fast16_t&gt;  atomic_int_fast16_t;
+<span class="lineNum">     512 </span>            : typedef atomic&lt;uint_fast16_t&gt; atomic_uint_fast16_t;
+<span class="lineNum">     513 </span>            : typedef atomic&lt;int_fast32_t&gt;  atomic_int_fast32_t;
+<span class="lineNum">     514 </span>            : typedef atomic&lt;uint_fast32_t&gt; atomic_uint_fast32_t;
+<span class="lineNum">     515 </span>            : typedef atomic&lt;int_fast64_t&gt;  atomic_int_fast64_t;
+<span class="lineNum">     516 </span>            : typedef atomic&lt;uint_fast64_t&gt; atomic_uint_fast64_t;
+<span class="lineNum">     517 </span>            : 
+<span class="lineNum">     518 </span>            : typedef atomic&lt;int8_t&gt;   atomic_int8_t;
+<span class="lineNum">     519 </span>            : typedef atomic&lt;uint8_t&gt;  atomic_uint8_t;
+<span class="lineNum">     520 </span>            : typedef atomic&lt;int16_t&gt;  atomic_int16_t;
+<span class="lineNum">     521 </span>            : typedef atomic&lt;uint16_t&gt; atomic_uint16_t;
+<span class="lineNum">     522 </span>            : typedef atomic&lt;int32_t&gt;  atomic_int32_t;
+<span class="lineNum">     523 </span>            : typedef atomic&lt;uint32_t&gt; atomic_uint32_t;
+<span class="lineNum">     524 </span>            : typedef atomic&lt;int64_t&gt;  atomic_int64_t;
+<span class="lineNum">     525 </span>            : typedef atomic&lt;uint64_t&gt; atomic_uint64_t;
+<span class="lineNum">     526 </span>            : 
+<span class="lineNum">     527 </span>            : typedef atomic&lt;intptr_t&gt;  atomic_intptr_t;
+<span class="lineNum">     528 </span>            : typedef atomic&lt;uintptr_t&gt; atomic_uintptr_t;
+<span class="lineNum">     529 </span>            : typedef atomic&lt;size_t&gt;    atomic_size_t;
+<span class="lineNum">     530 </span>            : typedef atomic&lt;ptrdiff_t&gt; atomic_ptrdiff_t;
+<span class="lineNum">     531 </span>            : typedef atomic&lt;intmax_t&gt;  atomic_intmax_t;
+<span class="lineNum">     532 </span>            : typedef atomic&lt;uintmax_t&gt; atomic_uintmax_t;
+<span class="lineNum">     533 </span>            : 
+<span class="lineNum">     534 </span>            : // fences
+<span class="lineNum">     535 </span>            : 
+<span class="lineNum">     536 </span>            : void atomic_thread_fence(memory_order m) noexcept;
+<span class="lineNum">     537 </span>            : void atomic_signal_fence(memory_order m) noexcept;
+<span class="lineNum">     538 </span>            : 
+<span class="lineNum">     539 </span>            : }  // std
+<span class="lineNum">     540 </span>            : 
+<span class="lineNum">     541 </span>            : */
+<span class="lineNum">     542 </span>            : 
+<span class="lineNum">     543 </span>            : #include &lt;__config&gt;
+<span class="lineNum">     544 </span>            : #include &lt;cstddef&gt;
+<span class="lineNum">     545 </span>            : #include &lt;cstdint&gt;
+<span class="lineNum">     546 </span>            : #include &lt;type_traits&gt;
+<span class="lineNum">     547 </span>            : 
+<span class="lineNum">     548 </span>            : #if !defined(_LIBCPP_HAS_NO_PRAGMA_SYSTEM_HEADER)
+<span class="lineNum">     549 </span>            : #pragma GCC system_header
+<span class="lineNum">     550 </span>            : #endif
+<span class="lineNum">     551 </span>            : 
+<span class="lineNum">     552 </span>            : #ifdef _LIBCPP_HAS_NO_THREADS
+<span class="lineNum">     553 </span>            : #error &lt;atomic&gt; is not supported on this single threaded system
+<span class="lineNum">     554 </span>            : #endif
+<span class="lineNum">     555 </span>            : #if !defined(_LIBCPP_HAS_C_ATOMIC_IMP) &amp;&amp; !defined(_LIBCPP_HAS_GCC_ATOMIC_IMP)
+<span class="lineNum">     556 </span>            : #error &lt;atomic&gt; is not implemented
+<span class="lineNum">     557 </span>            : #endif
+<span class="lineNum">     558 </span>            : #ifdef kill_dependency
+<span class="lineNum">     559 </span>            : #error C++ standard library is incompatible with &lt;stdatomic.h&gt;
+<span class="lineNum">     560 </span>            : #endif
+<span class="lineNum">     561 </span>            : 
+<span class="lineNum">     562 </span>            : #if _LIBCPP_STD_VER &gt; 14
+<span class="lineNum">     563 </span>            : # define __cpp_lib_atomic_is_always_lock_free 201603L
+<span class="lineNum">     564 </span>            : #endif
+<span class="lineNum">     565 </span>            : 
+<span class="lineNum">     566 </span>            : #define _LIBCPP_CHECK_STORE_MEMORY_ORDER(__m) \
+<span class="lineNum">     567 </span>            :   _LIBCPP_DIAGNOSE_WARNING(__m == memory_order_consume || \
+<span class="lineNum">     568 </span>            :                            __m == memory_order_acquire || \
+<span class="lineNum">     569 </span>            :                            __m == memory_order_acq_rel,   \
+<span class="lineNum">     570 </span>            :                         &quot;memory order argument to atomic operation is invalid&quot;)
+<span class="lineNum">     571 </span>            : 
+<span class="lineNum">     572 </span>            : #define _LIBCPP_CHECK_LOAD_MEMORY_ORDER(__m) \
+<span class="lineNum">     573 </span>            :   _LIBCPP_DIAGNOSE_WARNING(__m == memory_order_release || \
+<span class="lineNum">     574 </span>            :                            __m == memory_order_acq_rel,   \
+<span class="lineNum">     575 </span>            :                         &quot;memory order argument to atomic operation is invalid&quot;)
+<span class="lineNum">     576 </span>            : 
+<span class="lineNum">     577 </span>            : #define _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__m, __f) \
+<span class="lineNum">     578 </span>            :   _LIBCPP_DIAGNOSE_WARNING(__f == memory_order_release || \
+<span class="lineNum">     579 </span>            :                            __f == memory_order_acq_rel,   \
+<span class="lineNum">     580 </span>            :                         &quot;memory order argument to atomic operation is invalid&quot;)
+<span class="lineNum">     581 </span>            : 
+<span class="lineNum">     582 </span>            : _LIBCPP_BEGIN_NAMESPACE_STD
+<span class="lineNum">     583 </span>            : 
+<span class="lineNum">     584 </span>            : typedef enum memory_order
+<span class="lineNum">     585 </span>            : {
+<span class="lineNum">     586 </span>            :     memory_order_relaxed, memory_order_consume, memory_order_acquire,
+<span class="lineNum">     587 </span>            :     memory_order_release, memory_order_acq_rel, memory_order_seq_cst
+<span class="lineNum">     588 </span>            : } memory_order;
+<span class="lineNum">     589 </span>            : 
+<span class="lineNum">     590 </span>            : #if defined(_LIBCPP_HAS_GCC_ATOMIC_IMP)
+<span class="lineNum">     591 </span>            : namespace __gcc_atomic {
+<span class="lineNum">     592 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     593 </span>            : struct __gcc_atomic_t {
+<span class="lineNum">     594 </span>            : 
+<span class="lineNum">     595 </span>            : #if _GNUC_VER &gt;= 501
+<span class="lineNum">     596 </span>            :     static_assert(is_trivially_copyable&lt;_Tp&gt;::value,
+<span class="lineNum">     597 </span>            :       &quot;std::atomic&lt;Tp&gt; requires that 'Tp' be a trivially copyable type&quot;);
+<span class="lineNum">     598 </span>            : #endif
+<span class="lineNum">     599 </span>            : 
+<span class="lineNum">     600 </span>            :   _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     601 </span>            : #ifndef _LIBCPP_CXX03_LANG
+<span class="lineNum">     602 </span>            :     __gcc_atomic_t() _NOEXCEPT = default;
+<span class="lineNum">     603 </span>            : #else
+<span class="lineNum">     604 </span>            :     __gcc_atomic_t() _NOEXCEPT : __a_value() {}
+<span class="lineNum">     605 </span>            : #endif // _LIBCPP_CXX03_LANG
+<span class="lineNum">     606 </span>            :   _LIBCPP_CONSTEXPR explicit __gcc_atomic_t(_Tp value) _NOEXCEPT
+<span class="lineNum">     607 </span>            :     : __a_value(value) {}
+<span class="lineNum">     608 </span>            :   _Tp __a_value;
+<span class="lineNum">     609 </span>            : };
+<span class="lineNum">     610 </span>            : #define _Atomic(x) __gcc_atomic::__gcc_atomic_t&lt;x&gt;
+<span class="lineNum">     611 </span>            : 
+<span class="lineNum">     612 </span>            : template &lt;typename _Tp&gt; _Tp __create();
+<span class="lineNum">     613 </span>            : 
+<span class="lineNum">     614 </span>            : template &lt;typename _Tp, typename _Td&gt;
+<span class="lineNum">     615 </span>            : typename enable_if&lt;sizeof(_Tp()-&gt;__a_value = __create&lt;_Td&gt;()), char&gt;::type
+<span class="lineNum">     616 </span>            :     __test_atomic_assignable(int);
+<span class="lineNum">     617 </span>            : template &lt;typename _Tp, typename _Up&gt;
+<span class="lineNum">     618 </span>            : __two __test_atomic_assignable(...);
+<span class="lineNum">     619 </span>            : 
+<span class="lineNum">     620 </span>            : template &lt;typename _Tp, typename _Td&gt;
+<span class="lineNum">     621 </span>            : struct __can_assign {
+<span class="lineNum">     622 </span>            :   static const bool value =
+<span class="lineNum">     623 </span>            :       sizeof(__test_atomic_assignable&lt;_Tp, _Td&gt;(1)) == sizeof(char);
+<span class="lineNum">     624 </span>            : };
+<span class="lineNum">     625 </span>            : 
+<span class="lineNum">     626 </span>            : static inline _LIBCPP_CONSTEXPR int __to_gcc_order(memory_order __order) {
+<span class="lineNum">     627 </span>            :   // Avoid switch statement to make this a constexpr.
+<span class="lineNum">     628 </span>            :   return __order == memory_order_relaxed ? __ATOMIC_RELAXED:
+<span class="lineNum">     629 </span>            :          (__order == memory_order_acquire ? __ATOMIC_ACQUIRE:
+<span class="lineNum">     630 </span>            :           (__order == memory_order_release ? __ATOMIC_RELEASE:
+<span class="lineNum">     631 </span>            :            (__order == memory_order_seq_cst ? __ATOMIC_SEQ_CST:
+<span class="lineNum">     632 </span>            :             (__order == memory_order_acq_rel ? __ATOMIC_ACQ_REL:
+<span class="lineNum">     633 </span>            :               __ATOMIC_CONSUME))));
+<span class="lineNum">     634 </span>            : }
+<span class="lineNum">     635 </span>            : 
+<span class="lineNum">     636 </span>            : static inline _LIBCPP_CONSTEXPR int __to_gcc_failure_order(memory_order __order) {
+<span class="lineNum">     637 </span>            :   // Avoid switch statement to make this a constexpr.
+<span class="lineNum">     638 </span>            :   return __order == memory_order_relaxed ? __ATOMIC_RELAXED:
+<span class="lineNum">     639 </span>            :          (__order == memory_order_acquire ? __ATOMIC_ACQUIRE:
+<span class="lineNum">     640 </span>            :           (__order == memory_order_release ? __ATOMIC_RELAXED:
+<span class="lineNum">     641 </span>            :            (__order == memory_order_seq_cst ? __ATOMIC_SEQ_CST:
+<span class="lineNum">     642 </span>            :             (__order == memory_order_acq_rel ? __ATOMIC_ACQUIRE:
+<span class="lineNum">     643 </span>            :               __ATOMIC_CONSUME))));
+<span class="lineNum">     644 </span>            : }
+<span class="lineNum">     645 </span>            : 
+<span class="lineNum">     646 </span>            : } // namespace __gcc_atomic
+<span class="lineNum">     647 </span>            : 
+<span class="lineNum">     648 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     649 </span>            : static inline
+<span class="lineNum">     650 </span>            : typename enable_if&lt;
+<span class="lineNum">     651 </span>            :     __gcc_atomic::__can_assign&lt;volatile _Atomic(_Tp)*, _Tp&gt;::value&gt;::type
+<span class="lineNum">     652 </span>            : __c11_atomic_init(volatile _Atomic(_Tp)* __a,  _Tp __val) {
+<span class="lineNum">     653 </span>            :   __a-&gt;__a_value = __val;
+<span class="lineNum">     654 </span>            : }
+<span class="lineNum">     655 </span>            : 
+<span class="lineNum">     656 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     657 </span>            : static inline
+<span class="lineNum">     658 </span>            : typename enable_if&lt;
+<span class="lineNum">     659 </span>            :     !__gcc_atomic::__can_assign&lt;volatile _Atomic(_Tp)*, _Tp&gt;::value &amp;&amp;
+<span class="lineNum">     660 </span>            :      __gcc_atomic::__can_assign&lt;         _Atomic(_Tp)*, _Tp&gt;::value&gt;::type
+<span class="lineNum">     661 </span>            : __c11_atomic_init(volatile _Atomic(_Tp)* __a,  _Tp __val) {
+<span class="lineNum">     662 </span>            :   // [atomics.types.generic]p1 guarantees _Tp is trivially copyable. Because
+<span class="lineNum">     663 </span>            :   // the default operator= in an object is not volatile, a byte-by-byte copy
+<span class="lineNum">     664 </span>            :   // is required.
+<span class="lineNum">     665 </span>            :   volatile char* to = reinterpret_cast&lt;volatile char*&gt;(&amp;__a-&gt;__a_value);
+<span class="lineNum">     666 </span>            :   volatile char* end = to + sizeof(_Tp);
+<span class="lineNum">     667 </span>            :   char* from = reinterpret_cast&lt;char*&gt;(&amp;__val);
+<span class="lineNum">     668 </span>            :   while (to != end) {
+<span class="lineNum">     669 </span>            :     *to++ = *from++;
+<span class="lineNum">     670 </span>            :   }
+<span class="lineNum">     671 </span>            : }
+<span class="lineNum">     672 </span>            : 
+<span class="lineNum">     673 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     674 </span>            : static inline void __c11_atomic_init(_Atomic(_Tp)* __a,  _Tp __val) {
+<span class="lineNum">     675 </span>            :   __a-&gt;__a_value = __val;
+<span class="lineNum">     676 </span>            : }
+<span class="lineNum">     677 </span>            : 
+<span class="lineNum">     678 </span>            : static inline void __c11_atomic_thread_fence(memory_order __order) {
+<span class="lineNum">     679 </span>            :   __atomic_thread_fence(__gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     680 </span>            : }
+<span class="lineNum">     681 </span>            : 
+<span class="lineNum">     682 </span>            : static inline void __c11_atomic_signal_fence(memory_order __order) {
+<span class="lineNum">     683 </span>            :   __atomic_signal_fence(__gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     684 </span>            : }
+<span class="lineNum">     685 </span>            : 
+<span class="lineNum">     686 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     687 </span>            : static inline void __c11_atomic_store(volatile _Atomic(_Tp)* __a,  _Tp __val,
+<span class="lineNum">     688 </span>            :                                       memory_order __order) {
+<span class="lineNum">     689 </span>            :   return __atomic_store(&amp;__a-&gt;__a_value, &amp;__val,
+<span class="lineNum">     690 </span>            :                         __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     691 </span>            : }
+<span class="lineNum">     692 </span>            : 
+<span class="lineNum">     693 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     694 </span>            : static inline void __c11_atomic_store(_Atomic(_Tp)* __a,  _Tp __val,
+<span class="lineNum">     695 </span>            :                                       memory_order __order) {
+<span class="lineNum">     696 </span>            :   __atomic_store(&amp;__a-&gt;__a_value, &amp;__val,
+<span class="lineNum">     697 </span>            :                  __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     698 </span>            : }
+<span class="lineNum">     699 </span>            : 
+<span class="lineNum">     700 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     701 </span>            : static inline _Tp __c11_atomic_load(volatile _Atomic(_Tp)* __a,
+<span class="lineNum">     702 </span>            :                                     memory_order __order) {
+<span class="lineNum">     703 </span>            :   _Tp __ret;
+<span class="lineNum">     704 </span>            :   __atomic_load(&amp;__a-&gt;__a_value, &amp;__ret,
+<span class="lineNum">     705 </span>            :                 __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     706 </span>            :   return __ret;
+<span class="lineNum">     707 </span>            : }
+<span class="lineNum">     708 </span>            : 
+<span class="lineNum">     709 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     710 </span>            : static inline _Tp __c11_atomic_load(_Atomic(_Tp)* __a, memory_order __order) {
+<span class="lineNum">     711 </span>            :   _Tp __ret;
+<span class="lineNum">     712 </span>            :   __atomic_load(&amp;__a-&gt;__a_value, &amp;__ret,
+<span class="lineNum">     713 </span>            :                 __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     714 </span>            :   return __ret;
+<span class="lineNum">     715 </span>            : }
+<span class="lineNum">     716 </span>            : 
+<span class="lineNum">     717 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     718 </span>            : static inline _Tp __c11_atomic_exchange(volatile _Atomic(_Tp)* __a,
+<span class="lineNum">     719 </span>            :                                         _Tp __value, memory_order __order) {
+<span class="lineNum">     720 </span>            :   _Tp __ret;
+<span class="lineNum">     721 </span>            :   __atomic_exchange(&amp;__a-&gt;__a_value, &amp;__value, &amp;__ret,
+<span class="lineNum">     722 </span>            :                     __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     723 </span>            :   return __ret;
+<span class="lineNum">     724 </span>            : }
+<span class="lineNum">     725 </span>            : 
+<span class="lineNum">     726 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     727 </span>            : static inline _Tp __c11_atomic_exchange(_Atomic(_Tp)* __a, _Tp __value,
+<span class="lineNum">     728 </span>            :                                         memory_order __order) {
+<span class="lineNum">     729 </span>            :   _Tp __ret;
+<span class="lineNum">     730 </span>            :   __atomic_exchange(&amp;__a-&gt;__a_value, &amp;__value, &amp;__ret,
+<span class="lineNum">     731 </span>            :                     __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     732 </span>            :   return __ret;
+<span class="lineNum">     733 </span>            : }
+<span class="lineNum">     734 </span>            : 
+<span class="lineNum">     735 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     736 </span>            : static inline bool __c11_atomic_compare_exchange_strong(
+<span class="lineNum">     737 </span>            :     volatile _Atomic(_Tp)* __a, _Tp* __expected, _Tp __value,
+<span class="lineNum">     738 </span>            :     memory_order __success, memory_order __failure) {
+<span class="lineNum">     739 </span>            :   return __atomic_compare_exchange(&amp;__a-&gt;__a_value, __expected, &amp;__value,
+<span class="lineNum">     740 </span>            :                                    false,
+<span class="lineNum">     741 </span>            :                                    __gcc_atomic::__to_gcc_order(__success),
+<span class="lineNum">     742 </span>            :                                    __gcc_atomic::__to_gcc_failure_order(__failure));
+<span class="lineNum">     743 </span>            : }
+<span class="lineNum">     744 </span>            : 
+<span class="lineNum">     745 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     746 </span>            : static inline bool __c11_atomic_compare_exchange_strong(
+<span class="lineNum">     747 </span>            :     _Atomic(_Tp)* __a, _Tp* __expected, _Tp __value, memory_order __success,
+<span class="lineNum">     748 </span>            :     memory_order __failure) {
+<span class="lineNum">     749 </span>            :   return __atomic_compare_exchange(&amp;__a-&gt;__a_value, __expected, &amp;__value,
+<span class="lineNum">     750 </span>            :                                    false,
+<span class="lineNum">     751 </span>            :                                    __gcc_atomic::__to_gcc_order(__success),
+<span class="lineNum">     752 </span>            :                                    __gcc_atomic::__to_gcc_failure_order(__failure));
+<span class="lineNum">     753 </span>            : }
+<span class="lineNum">     754 </span>            : 
+<span class="lineNum">     755 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     756 </span>            : static inline bool __c11_atomic_compare_exchange_weak(
+<span class="lineNum">     757 </span>            :     volatile _Atomic(_Tp)* __a, _Tp* __expected, _Tp __value,
+<span class="lineNum">     758 </span>            :     memory_order __success, memory_order __failure) {
+<span class="lineNum">     759 </span>            :   return __atomic_compare_exchange(&amp;__a-&gt;__a_value, __expected, &amp;__value,
+<span class="lineNum">     760 </span>            :                                    true,
+<span class="lineNum">     761 </span>            :                                    __gcc_atomic::__to_gcc_order(__success),
+<span class="lineNum">     762 </span>            :                                    __gcc_atomic::__to_gcc_failure_order(__failure));
+<span class="lineNum">     763 </span>            : }
+<span class="lineNum">     764 </span>            : 
+<span class="lineNum">     765 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     766 </span>            : static inline bool __c11_atomic_compare_exchange_weak(
+<span class="lineNum">     767 </span>            :     _Atomic(_Tp)* __a, _Tp* __expected, _Tp __value, memory_order __success,
+<span class="lineNum">     768 </span>            :     memory_order __failure) {
+<span class="lineNum">     769 </span>            :   return __atomic_compare_exchange(&amp;__a-&gt;__a_value, __expected, &amp;__value,
+<span class="lineNum">     770 </span>            :                                    true,
+<span class="lineNum">     771 </span>            :                                    __gcc_atomic::__to_gcc_order(__success),
+<span class="lineNum">     772 </span>            :                                    __gcc_atomic::__to_gcc_failure_order(__failure));
+<span class="lineNum">     773 </span>            : }
+<span class="lineNum">     774 </span>            : 
+<span class="lineNum">     775 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     776 </span>            : struct __skip_amt { enum {value = 1}; };
+<span class="lineNum">     777 </span>            : 
+<span class="lineNum">     778 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     779 </span>            : struct __skip_amt&lt;_Tp*&gt; { enum {value = sizeof(_Tp)}; };
+<span class="lineNum">     780 </span>            : 
+<span class="lineNum">     781 </span>            : // FIXME: Haven't figured out what the spec says about using arrays with
+<span class="lineNum">     782 </span>            : // atomic_fetch_add. Force a failure rather than creating bad behavior.
+<span class="lineNum">     783 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     784 </span>            : struct __skip_amt&lt;_Tp[]&gt; { };
+<span class="lineNum">     785 </span>            : template &lt;typename _Tp, int n&gt;
+<span class="lineNum">     786 </span>            : struct __skip_amt&lt;_Tp[n]&gt; { };
+<span class="lineNum">     787 </span>            : 
+<span class="lineNum">     788 </span>            : template &lt;typename _Tp, typename _Td&gt;
+<span class="lineNum">     789 </span>            : static inline _Tp __c11_atomic_fetch_add(volatile _Atomic(_Tp)* __a,
+<span class="lineNum">     790 </span>            :                                          _Td __delta, memory_order __order) {
+<span class="lineNum">     791 </span>            :   return __atomic_fetch_add(&amp;__a-&gt;__a_value, __delta * __skip_amt&lt;_Tp&gt;::value,
+<span class="lineNum">     792 </span>            :                             __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     793 </span>            : }
+<span class="lineNum">     794 </span>            : 
+<span class="lineNum">     795 </span>            : template &lt;typename _Tp, typename _Td&gt;
+<span class="lineNum">     796 </span>            : static inline _Tp __c11_atomic_fetch_add(_Atomic(_Tp)* __a, _Td __delta,
+<span class="lineNum">     797 </span>            :                                          memory_order __order) {
+<span class="lineNum">     798 </span>            :   return __atomic_fetch_add(&amp;__a-&gt;__a_value, __delta * __skip_amt&lt;_Tp&gt;::value,
+<span class="lineNum">     799 </span>            :                             __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     800 </span>            : }
+<span class="lineNum">     801 </span>            : 
+<span class="lineNum">     802 </span>            : template &lt;typename _Tp, typename _Td&gt;
+<span class="lineNum">     803 </span>            : static inline _Tp __c11_atomic_fetch_sub(volatile _Atomic(_Tp)* __a,
+<span class="lineNum">     804 </span>            :                                          _Td __delta, memory_order __order) {
+<span class="lineNum">     805 </span>            :   return __atomic_fetch_sub(&amp;__a-&gt;__a_value, __delta * __skip_amt&lt;_Tp&gt;::value,
+<span class="lineNum">     806 </span>            :                             __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     807 </span>            : }
+<span class="lineNum">     808 </span>            : 
+<span class="lineNum">     809 </span>            : template &lt;typename _Tp, typename _Td&gt;
+<span class="lineNum">     810 </span>            : static inline _Tp __c11_atomic_fetch_sub(_Atomic(_Tp)* __a, _Td __delta,
+<span class="lineNum">     811 </span>            :                                          memory_order __order) {
+<span class="lineNum">     812 </span>            :   return __atomic_fetch_sub(&amp;__a-&gt;__a_value, __delta * __skip_amt&lt;_Tp&gt;::value,
+<span class="lineNum">     813 </span>            :                             __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     814 </span>            : }
+<span class="lineNum">     815 </span>            : 
+<span class="lineNum">     816 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     817 </span>            : static inline _Tp __c11_atomic_fetch_and(volatile _Atomic(_Tp)* __a,
+<span class="lineNum">     818 </span>            :                                          _Tp __pattern, memory_order __order) {
+<span class="lineNum">     819 </span>            :   return __atomic_fetch_and(&amp;__a-&gt;__a_value, __pattern,
+<span class="lineNum">     820 </span>            :                             __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     821 </span>            : }
+<span class="lineNum">     822 </span>            : 
+<span class="lineNum">     823 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     824 </span>            : static inline _Tp __c11_atomic_fetch_and(_Atomic(_Tp)* __a,
+<span class="lineNum">     825 </span>            :                                          _Tp __pattern, memory_order __order) {
+<span class="lineNum">     826 </span>            :   return __atomic_fetch_and(&amp;__a-&gt;__a_value, __pattern,
+<span class="lineNum">     827 </span>            :                             __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     828 </span>            : }
+<span class="lineNum">     829 </span>            : 
+<span class="lineNum">     830 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     831 </span>            : static inline _Tp __c11_atomic_fetch_or(volatile _Atomic(_Tp)* __a,
+<span class="lineNum">     832 </span>            :                                         _Tp __pattern, memory_order __order) {
+<span class="lineNum">     833 </span>            :   return __atomic_fetch_or(&amp;__a-&gt;__a_value, __pattern,
+<span class="lineNum">     834 </span>            :                            __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     835 </span>            : }
+<span class="lineNum">     836 </span>            : 
+<span class="lineNum">     837 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     838 </span>            : static inline _Tp __c11_atomic_fetch_or(_Atomic(_Tp)* __a, _Tp __pattern,
+<span class="lineNum">     839 </span>            :                                         memory_order __order) {
+<span class="lineNum">     840 </span>            :   return __atomic_fetch_or(&amp;__a-&gt;__a_value, __pattern,
+<span class="lineNum">     841 </span>            :                            __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     842 </span>            : }
+<span class="lineNum">     843 </span>            : 
+<span class="lineNum">     844 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     845 </span>            : static inline _Tp __c11_atomic_fetch_xor(volatile _Atomic(_Tp)* __a,
+<span class="lineNum">     846 </span>            :                                          _Tp __pattern, memory_order __order) {
+<span class="lineNum">     847 </span>            :   return __atomic_fetch_xor(&amp;__a-&gt;__a_value, __pattern,
+<span class="lineNum">     848 </span>            :                             __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     849 </span>            : }
+<span class="lineNum">     850 </span>            : 
+<span class="lineNum">     851 </span>            : template &lt;typename _Tp&gt;
+<span class="lineNum">     852 </span>            : static inline _Tp __c11_atomic_fetch_xor(_Atomic(_Tp)* __a, _Tp __pattern,
+<span class="lineNum">     853 </span>            :                                          memory_order __order) {
+<span class="lineNum">     854 </span>            :   return __atomic_fetch_xor(&amp;__a-&gt;__a_value, __pattern,
+<span class="lineNum">     855 </span>            :                             __gcc_atomic::__to_gcc_order(__order));
+<span class="lineNum">     856 </span>            : }
+<span class="lineNum">     857 </span>            : #endif // _LIBCPP_HAS_GCC_ATOMIC_IMP
+<span class="lineNum">     858 </span>            : 
+<span class="lineNum">     859 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">     860 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     861 </span>            : _Tp
+<span class="lineNum">     862 </span>            : kill_dependency(_Tp __y) _NOEXCEPT
+<span class="lineNum">     863 </span>            : {
+<span class="lineNum">     864 </span>            :     return __y;
+<span class="lineNum">     865 </span>            : }
+<span class="lineNum">     866 </span>            : 
+<span class="lineNum">     867 </span>            : #if defined(__CLANG_ATOMIC_BOOL_LOCK_FREE)
+<span class="lineNum">     868 </span>            : # define ATOMIC_BOOL_LOCK_FREE      __CLANG_ATOMIC_BOOL_LOCK_FREE
+<span class="lineNum">     869 </span>            : # define ATOMIC_CHAR_LOCK_FREE      __CLANG_ATOMIC_CHAR_LOCK_FREE
+<span class="lineNum">     870 </span>            : # define ATOMIC_CHAR16_T_LOCK_FREE  __CLANG_ATOMIC_CHAR16_T_LOCK_FREE
+<span class="lineNum">     871 </span>            : # define ATOMIC_CHAR32_T_LOCK_FREE  __CLANG_ATOMIC_CHAR32_T_LOCK_FREE
+<span class="lineNum">     872 </span>            : # define ATOMIC_WCHAR_T_LOCK_FREE   __CLANG_ATOMIC_WCHAR_T_LOCK_FREE
+<span class="lineNum">     873 </span>            : # define ATOMIC_SHORT_LOCK_FREE     __CLANG_ATOMIC_SHORT_LOCK_FREE
+<span class="lineNum">     874 </span>            : # define ATOMIC_INT_LOCK_FREE       __CLANG_ATOMIC_INT_LOCK_FREE
+<span class="lineNum">     875 </span>            : # define ATOMIC_LONG_LOCK_FREE      __CLANG_ATOMIC_LONG_LOCK_FREE
+<span class="lineNum">     876 </span>            : # define ATOMIC_LLONG_LOCK_FREE     __CLANG_ATOMIC_LLONG_LOCK_FREE
+<span class="lineNum">     877 </span>            : # define ATOMIC_POINTER_LOCK_FREE   __CLANG_ATOMIC_POINTER_LOCK_FREE
+<span class="lineNum">     878 </span>            : #else
+<span class="lineNum">     879 </span>            : # define ATOMIC_BOOL_LOCK_FREE      __GCC_ATOMIC_BOOL_LOCK_FREE
+<span class="lineNum">     880 </span>            : # define ATOMIC_CHAR_LOCK_FREE      __GCC_ATOMIC_CHAR_LOCK_FREE
+<span class="lineNum">     881 </span>            : # define ATOMIC_CHAR16_T_LOCK_FREE  __GCC_ATOMIC_CHAR16_T_LOCK_FREE
+<span class="lineNum">     882 </span>            : # define ATOMIC_CHAR32_T_LOCK_FREE  __GCC_ATOMIC_CHAR32_T_LOCK_FREE
+<span class="lineNum">     883 </span>            : # define ATOMIC_WCHAR_T_LOCK_FREE   __GCC_ATOMIC_WCHAR_T_LOCK_FREE
+<span class="lineNum">     884 </span>            : # define ATOMIC_SHORT_LOCK_FREE     __GCC_ATOMIC_SHORT_LOCK_FREE
+<span class="lineNum">     885 </span>            : # define ATOMIC_INT_LOCK_FREE       __GCC_ATOMIC_INT_LOCK_FREE
+<span class="lineNum">     886 </span>            : # define ATOMIC_LONG_LOCK_FREE      __GCC_ATOMIC_LONG_LOCK_FREE
+<span class="lineNum">     887 </span>            : # define ATOMIC_LLONG_LOCK_FREE     __GCC_ATOMIC_LLONG_LOCK_FREE
+<span class="lineNum">     888 </span>            : # define ATOMIC_POINTER_LOCK_FREE   __GCC_ATOMIC_POINTER_LOCK_FREE
+<span class="lineNum">     889 </span>            : #endif
+<span class="lineNum">     890 </span>            : 
+<span class="lineNum">     891 </span>            : // general atomic&lt;T&gt;
+<span class="lineNum">     892 </span>            : 
+<span class="lineNum">     893 </span>            : template &lt;class _Tp, bool = is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value&gt;
+<span class="lineNum">     894 </span>            : struct __atomic_base  // false
+<span class="lineNum">     895 </span>            : {
+<span class="lineNum">     896 </span>            :     mutable _Atomic(_Tp) __a_;
+<span class="lineNum">     897 </span>            : 
+<span class="lineNum">     898 </span>            : #if defined(__cpp_lib_atomic_is_always_lock_free)
+<span class="lineNum">     899 </span>            :   static _LIBCPP_CONSTEXPR bool is_always_lock_free = __atomic_always_lock_free(sizeof(__a_), 0);
+<span class="lineNum">     900 </span>            : #endif
+<span class="lineNum">     901 </span>            : 
+<span class="lineNum">     902 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     903 </span>            :     bool is_lock_free() const volatile _NOEXCEPT
+<span class="lineNum">     904 </span>            :     {
+<span class="lineNum">     905 </span>            : #if defined(_LIBCPP_HAS_C_ATOMIC_IMP)
+<span class="lineNum">     906 </span>            :     return __c11_atomic_is_lock_free(sizeof(_Tp));
+<span class="lineNum">     907 </span>            : #else
+<span class="lineNum">     908 </span>            :     return __atomic_is_lock_free(sizeof(_Tp), 0);
+<span class="lineNum">     909 </span>            : #endif
+<span class="lineNum">     910 </span>            :     }
+<span class="lineNum">     911 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     912 </span>            :     bool is_lock_free() const _NOEXCEPT
+<span class="lineNum">     913 </span>            :         {return static_cast&lt;__atomic_base const volatile*&gt;(this)-&gt;is_lock_free();}
+<span class="lineNum">     914 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     915 </span>            :     void store(_Tp __d, memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">     916 </span>            :       _LIBCPP_CHECK_STORE_MEMORY_ORDER(__m)
+<a name="917"><span class="lineNum">     917 </span>            :         {__c11_atomic_store(&amp;__a_, __d, __m);}</a>
+<span class="lineNum">     918 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     919 </span>            :     void store(_Tp __d, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">     920 </span>            :       _LIBCPP_CHECK_STORE_MEMORY_ORDER(__m)
+<span class="lineNum">     921 </span><span class="lineNoCov">          0 :         {__c11_atomic_store(&amp;__a_, __d, __m);}</span>
+<span class="lineNum">     922 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     923 </span>            :     _Tp load(memory_order __m = memory_order_seq_cst) const volatile _NOEXCEPT
+<span class="lineNum">     924 </span>            :       _LIBCPP_CHECK_LOAD_MEMORY_ORDER(__m)
+<a name="925"><span class="lineNum">     925 </span>            :         {return __c11_atomic_load(&amp;__a_, __m);}</a>
+<span class="lineNum">     926 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     927 </span>            :     _Tp load(memory_order __m = memory_order_seq_cst) const _NOEXCEPT
+<span class="lineNum">     928 </span>            :       _LIBCPP_CHECK_LOAD_MEMORY_ORDER(__m)
+<span class="lineNum">     929 </span><span class="lineCov">        651 :         {return __c11_atomic_load(&amp;__a_, __m);}</span>
+<span class="lineNum">     930 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     931 </span>            :     operator _Tp() const volatile _NOEXCEPT {return load();}
+<span class="lineNum">     932 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     933 </span>            :     operator _Tp() const _NOEXCEPT          {return load();}
+<span class="lineNum">     934 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     935 </span>            :     _Tp exchange(_Tp __d, memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">     936 </span>            :         {return __c11_atomic_exchange(&amp;__a_, __d, __m);}
+<span class="lineNum">     937 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     938 </span>            :     _Tp exchange(_Tp __d, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">     939 </span>            :         {return __c11_atomic_exchange(&amp;__a_, __d, __m);}
+<span class="lineNum">     940 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     941 </span>            :     bool compare_exchange_weak(_Tp&amp; __e, _Tp __d,
+<span class="lineNum">     942 </span>            :                                memory_order __s, memory_order __f) volatile _NOEXCEPT
+<span class="lineNum">     943 </span>            :       _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
+<span class="lineNum">     944 </span>            :         {return __c11_atomic_compare_exchange_weak(&amp;__a_, &amp;__e, __d, __s, __f);}
+<span class="lineNum">     945 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     946 </span>            :     bool compare_exchange_weak(_Tp&amp; __e, _Tp __d,
+<span class="lineNum">     947 </span>            :                                memory_order __s, memory_order __f) _NOEXCEPT
+<span class="lineNum">     948 </span>            :       _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
+<span class="lineNum">     949 </span>            :         {return __c11_atomic_compare_exchange_weak(&amp;__a_, &amp;__e, __d, __s, __f);}
+<span class="lineNum">     950 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     951 </span>            :     bool compare_exchange_strong(_Tp&amp; __e, _Tp __d,
+<span class="lineNum">     952 </span>            :                                  memory_order __s, memory_order __f) volatile _NOEXCEPT
+<span class="lineNum">     953 </span>            :       _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
+<span class="lineNum">     954 </span>            :         {return __c11_atomic_compare_exchange_strong(&amp;__a_, &amp;__e, __d, __s, __f);}
+<span class="lineNum">     955 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     956 </span>            :     bool compare_exchange_strong(_Tp&amp; __e, _Tp __d,
+<span class="lineNum">     957 </span>            :                                  memory_order __s, memory_order __f) _NOEXCEPT
+<span class="lineNum">     958 </span>            :       _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
+<span class="lineNum">     959 </span>            :         {return __c11_atomic_compare_exchange_strong(&amp;__a_, &amp;__e, __d, __s, __f);}
+<span class="lineNum">     960 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     961 </span>            :     bool compare_exchange_weak(_Tp&amp; __e, _Tp __d,
+<span class="lineNum">     962 </span>            :                               memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">     963 </span>            :         {return __c11_atomic_compare_exchange_weak(&amp;__a_, &amp;__e, __d, __m, __m);}
+<span class="lineNum">     964 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     965 </span>            :     bool compare_exchange_weak(_Tp&amp; __e, _Tp __d,
+<span class="lineNum">     966 </span>            :                                memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">     967 </span>            :         {return __c11_atomic_compare_exchange_weak(&amp;__a_, &amp;__e, __d, __m, __m);}
+<span class="lineNum">     968 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     969 </span>            :     bool compare_exchange_strong(_Tp&amp; __e, _Tp __d,
+<span class="lineNum">     970 </span>            :                               memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">     971 </span>            :         {return __c11_atomic_compare_exchange_strong(&amp;__a_, &amp;__e, __d, __m, __m);}
+<span class="lineNum">     972 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     973 </span>            :     bool compare_exchange_strong(_Tp&amp; __e, _Tp __d,
+<span class="lineNum">     974 </span>            :                                  memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">     975 </span>            :         {return __c11_atomic_compare_exchange_strong(&amp;__a_, &amp;__e, __d, __m, __m);}
+<span class="lineNum">     976 </span>            : 
+<span class="lineNum">     977 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     978 </span>            : #ifndef _LIBCPP_CXX03_LANG
+<span class="lineNum">     979 </span>            :     __atomic_base() _NOEXCEPT = default;
+<span class="lineNum">     980 </span>            : #else
+<span class="lineNum">     981 </span>            :     __atomic_base() _NOEXCEPT : __a_() {}
+<span class="lineNum">     982 </span>            : #endif // _LIBCPP_CXX03_LANG
+<a name="983"><span class="lineNum">     983 </span>            : </a>
+<span class="lineNum">     984 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">     985 </span><span class="lineNoCov">          0 :     _LIBCPP_CONSTEXPR __atomic_base(_Tp __d) _NOEXCEPT : __a_(__d) {}</span>
+<span class="lineNum">     986 </span>            : #ifndef _LIBCPP_CXX03_LANG
+<span class="lineNum">     987 </span>            :     __atomic_base(const __atomic_base&amp;) = delete;
+<span class="lineNum">     988 </span>            :     __atomic_base&amp; operator=(const __atomic_base&amp;) = delete;
+<span class="lineNum">     989 </span>            :     __atomic_base&amp; operator=(const __atomic_base&amp;) volatile = delete;
+<span class="lineNum">     990 </span>            : #else
+<span class="lineNum">     991 </span>            : private:
+<span class="lineNum">     992 </span>            :     __atomic_base(const __atomic_base&amp;);
+<span class="lineNum">     993 </span>            :     __atomic_base&amp; operator=(const __atomic_base&amp;);
+<span class="lineNum">     994 </span>            :     __atomic_base&amp; operator=(const __atomic_base&amp;) volatile;
+<span class="lineNum">     995 </span>            : #endif
+<span class="lineNum">     996 </span>            : };
+<span class="lineNum">     997 </span>            : 
+<span class="lineNum">     998 </span>            : #if defined(__cpp_lib_atomic_is_always_lock_free)
+<span class="lineNum">     999 </span>            : template &lt;class _Tp, bool __b&gt;
+<span class="lineNum">    1000 </span>            : _LIBCPP_CONSTEXPR bool __atomic_base&lt;_Tp, __b&gt;::is_always_lock_free;
+<span class="lineNum">    1001 </span>            : #endif
+<span class="lineNum">    1002 </span>            : 
+<span class="lineNum">    1003 </span>            : // atomic&lt;Integral&gt;
+<span class="lineNum">    1004 </span>            : 
+<span class="lineNum">    1005 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1006 </span>            : struct __atomic_base&lt;_Tp, true&gt;
+<span class="lineNum">    1007 </span>            :     : public __atomic_base&lt;_Tp, false&gt;
+<span class="lineNum">    1008 </span>            : {
+<span class="lineNum">    1009 </span>            :     typedef __atomic_base&lt;_Tp, false&gt; __base;
+<span class="lineNum">    1010 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<a name="1011"><span class="lineNum">    1011 </span>            :     __atomic_base() _NOEXCEPT _LIBCPP_DEFAULT</a>
+<span class="lineNum">    1012 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1013 </span><span class="lineNoCov">          0 :     _LIBCPP_CONSTEXPR __atomic_base(_Tp __d) _NOEXCEPT : __base(__d) {}</span>
+<span class="lineNum">    1014 </span>            : 
+<span class="lineNum">    1015 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1016 </span>            :     _Tp fetch_add(_Tp __op, memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<a name="1017"><span class="lineNum">    1017 </span>            :         {return __c11_atomic_fetch_add(&amp;this-&gt;__a_, __op, __m);}</a>
+<span class="lineNum">    1018 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1019 </span>            :     _Tp fetch_add(_Tp __op, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1020 </span><span class="lineCov">         27 :         {return __c11_atomic_fetch_add(&amp;this-&gt;__a_, __op, __m);}</span>
+<span class="lineNum">    1021 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1022 </span>            :     _Tp fetch_sub(_Tp __op, memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<a name="1023"><span class="lineNum">    1023 </span>            :         {return __c11_atomic_fetch_sub(&amp;this-&gt;__a_, __op, __m);}</a>
+<span class="lineNum">    1024 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1025 </span>            :     _Tp fetch_sub(_Tp __op, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1026 </span><span class="lineCov">        558 :         {return __c11_atomic_fetch_sub(&amp;this-&gt;__a_, __op, __m);}</span>
+<span class="lineNum">    1027 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1028 </span>            :     _Tp fetch_and(_Tp __op, memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">    1029 </span>            :         {return __c11_atomic_fetch_and(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1030 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1031 </span>            :     _Tp fetch_and(_Tp __op, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1032 </span>            :         {return __c11_atomic_fetch_and(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1033 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1034 </span>            :     _Tp fetch_or(_Tp __op, memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">    1035 </span>            :         {return __c11_atomic_fetch_or(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1036 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1037 </span>            :     _Tp fetch_or(_Tp __op, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1038 </span>            :         {return __c11_atomic_fetch_or(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1039 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1040 </span>            :     _Tp fetch_xor(_Tp __op, memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">    1041 </span>            :         {return __c11_atomic_fetch_xor(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1042 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1043 </span>            :     _Tp fetch_xor(_Tp __op, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1044 </span>            :         {return __c11_atomic_fetch_xor(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1045 </span>            : 
+<span class="lineNum">    1046 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1047 </span>            :     _Tp operator++(int) volatile _NOEXCEPT      {return fetch_add(_Tp(1));}
+<span class="lineNum">    1048 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1049 </span>            :     _Tp operator++(int) _NOEXCEPT               {return fetch_add(_Tp(1));}
+<span class="lineNum">    1050 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1051 </span>            :     _Tp operator--(int) volatile _NOEXCEPT      {return fetch_sub(_Tp(1));}
+<span class="lineNum">    1052 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1053 </span>            :     _Tp operator--(int) _NOEXCEPT               {return fetch_sub(_Tp(1));}
+<span class="lineNum">    1054 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<a name="1055"><span class="lineNum">    1055 </span>            :     _Tp operator++() volatile _NOEXCEPT         {return fetch_add(_Tp(1)) + _Tp(1);}</a>
+<span class="lineNum">    1056 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1057 </span><span class="lineCov">          9 :     _Tp operator++() _NOEXCEPT                  {return fetch_add(_Tp(1)) + _Tp(1);}</span>
+<span class="lineNum">    1058 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<a name="1059"><span class="lineNum">    1059 </span>            :     _Tp operator--() volatile _NOEXCEPT         {return fetch_sub(_Tp(1)) - _Tp(1);}</a>
+<span class="lineNum">    1060 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1061 </span><span class="lineCov">        186 :     _Tp operator--() _NOEXCEPT                  {return fetch_sub(_Tp(1)) - _Tp(1);}</span>
+<span class="lineNum">    1062 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1063 </span>            :     _Tp operator+=(_Tp __op) volatile _NOEXCEPT {return fetch_add(__op) + __op;}
+<span class="lineNum">    1064 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1065 </span>            :     _Tp operator+=(_Tp __op) _NOEXCEPT          {return fetch_add(__op) + __op;}
+<span class="lineNum">    1066 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1067 </span>            :     _Tp operator-=(_Tp __op) volatile _NOEXCEPT {return fetch_sub(__op) - __op;}
+<span class="lineNum">    1068 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1069 </span>            :     _Tp operator-=(_Tp __op) _NOEXCEPT          {return fetch_sub(__op) - __op;}
+<span class="lineNum">    1070 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1071 </span>            :     _Tp operator&amp;=(_Tp __op) volatile _NOEXCEPT {return fetch_and(__op) &amp; __op;}
+<span class="lineNum">    1072 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1073 </span>            :     _Tp operator&amp;=(_Tp __op) _NOEXCEPT          {return fetch_and(__op) &amp; __op;}
+<span class="lineNum">    1074 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1075 </span>            :     _Tp operator|=(_Tp __op) volatile _NOEXCEPT {return fetch_or(__op) | __op;}
+<span class="lineNum">    1076 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1077 </span>            :     _Tp operator|=(_Tp __op) _NOEXCEPT          {return fetch_or(__op) | __op;}
+<span class="lineNum">    1078 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1079 </span>            :     _Tp operator^=(_Tp __op) volatile _NOEXCEPT {return fetch_xor(__op) ^ __op;}
+<span class="lineNum">    1080 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1081 </span>            :     _Tp operator^=(_Tp __op) _NOEXCEPT          {return fetch_xor(__op) ^ __op;}
+<span class="lineNum">    1082 </span>            : };
+<span class="lineNum">    1083 </span>            : 
+<span class="lineNum">    1084 </span>            : // atomic&lt;T&gt;
+<span class="lineNum">    1085 </span>            : 
+<span class="lineNum">    1086 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1087 </span>            : struct atomic
+<span class="lineNum">    1088 </span>            :     : public __atomic_base&lt;_Tp&gt;
+<span class="lineNum">    1089 </span>            : {
+<span class="lineNum">    1090 </span>            :     typedef __atomic_base&lt;_Tp&gt; __base;
+<span class="lineNum">    1091 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<a name="1092"><span class="lineNum">    1092 </span>            :     atomic() _NOEXCEPT _LIBCPP_DEFAULT</a>
+<span class="lineNum">    1093 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1094 </span><span class="lineNoCov">          0 :     _LIBCPP_CONSTEXPR atomic(_Tp __d) _NOEXCEPT : __base(__d) {}</span>
+<span class="lineNum">    1095 </span>            : 
+<span class="lineNum">    1096 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1097 </span>            :     _Tp operator=(_Tp __d) volatile _NOEXCEPT
+<span class="lineNum">    1098 </span>            :         {__base::store(__d); return __d;}
+<span class="lineNum">    1099 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1100 </span>            :     _Tp operator=(_Tp __d) _NOEXCEPT
+<span class="lineNum">    1101 </span>            :         {__base::store(__d); return __d;}
+<span class="lineNum">    1102 </span>            : };
+<span class="lineNum">    1103 </span>            : 
+<span class="lineNum">    1104 </span>            : // atomic&lt;T*&gt;
+<span class="lineNum">    1105 </span>            : 
+<span class="lineNum">    1106 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1107 </span>            : struct atomic&lt;_Tp*&gt;
+<span class="lineNum">    1108 </span>            :     : public __atomic_base&lt;_Tp*&gt;
+<span class="lineNum">    1109 </span>            : {
+<span class="lineNum">    1110 </span>            :     typedef __atomic_base&lt;_Tp*&gt; __base;
+<span class="lineNum">    1111 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1112 </span>            :     atomic() _NOEXCEPT _LIBCPP_DEFAULT
+<span class="lineNum">    1113 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1114 </span>            :     _LIBCPP_CONSTEXPR atomic(_Tp* __d) _NOEXCEPT : __base(__d) {}
+<span class="lineNum">    1115 </span>            : 
+<span class="lineNum">    1116 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1117 </span>            :     _Tp* operator=(_Tp* __d) volatile _NOEXCEPT
+<span class="lineNum">    1118 </span>            :         {__base::store(__d); return __d;}
+<span class="lineNum">    1119 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1120 </span>            :     _Tp* operator=(_Tp* __d) _NOEXCEPT
+<span class="lineNum">    1121 </span>            :         {__base::store(__d); return __d;}
+<span class="lineNum">    1122 </span>            : 
+<span class="lineNum">    1123 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1124 </span>            :     _Tp* fetch_add(ptrdiff_t __op, memory_order __m = memory_order_seq_cst)
+<span class="lineNum">    1125 </span>            :                                                                         volatile _NOEXCEPT
+<span class="lineNum">    1126 </span>            :         {return __c11_atomic_fetch_add(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1127 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1128 </span>            :     _Tp* fetch_add(ptrdiff_t __op, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1129 </span>            :         {return __c11_atomic_fetch_add(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1130 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1131 </span>            :     _Tp* fetch_sub(ptrdiff_t __op, memory_order __m = memory_order_seq_cst)
+<span class="lineNum">    1132 </span>            :                                                                         volatile _NOEXCEPT
+<span class="lineNum">    1133 </span>            :         {return __c11_atomic_fetch_sub(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1134 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1135 </span>            :     _Tp* fetch_sub(ptrdiff_t __op, memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1136 </span>            :         {return __c11_atomic_fetch_sub(&amp;this-&gt;__a_, __op, __m);}
+<span class="lineNum">    1137 </span>            : 
+<span class="lineNum">    1138 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1139 </span>            :     _Tp* operator++(int) volatile _NOEXCEPT            {return fetch_add(1);}
+<span class="lineNum">    1140 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1141 </span>            :     _Tp* operator++(int) _NOEXCEPT                     {return fetch_add(1);}
+<span class="lineNum">    1142 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1143 </span>            :     _Tp* operator--(int) volatile _NOEXCEPT            {return fetch_sub(1);}
+<span class="lineNum">    1144 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1145 </span>            :     _Tp* operator--(int) _NOEXCEPT                     {return fetch_sub(1);}
+<span class="lineNum">    1146 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1147 </span>            :     _Tp* operator++() volatile _NOEXCEPT               {return fetch_add(1) + 1;}
+<span class="lineNum">    1148 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1149 </span>            :     _Tp* operator++() _NOEXCEPT                        {return fetch_add(1) + 1;}
+<span class="lineNum">    1150 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1151 </span>            :     _Tp* operator--() volatile _NOEXCEPT               {return fetch_sub(1) - 1;}
+<span class="lineNum">    1152 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1153 </span>            :     _Tp* operator--() _NOEXCEPT                        {return fetch_sub(1) - 1;}
+<span class="lineNum">    1154 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1155 </span>            :     _Tp* operator+=(ptrdiff_t __op) volatile _NOEXCEPT {return fetch_add(__op) + __op;}
+<span class="lineNum">    1156 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1157 </span>            :     _Tp* operator+=(ptrdiff_t __op) _NOEXCEPT          {return fetch_add(__op) + __op;}
+<span class="lineNum">    1158 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1159 </span>            :     _Tp* operator-=(ptrdiff_t __op) volatile _NOEXCEPT {return fetch_sub(__op) - __op;}
+<span class="lineNum">    1160 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1161 </span>            :     _Tp* operator-=(ptrdiff_t __op) _NOEXCEPT          {return fetch_sub(__op) - __op;}
+<span class="lineNum">    1162 </span>            : };
+<span class="lineNum">    1163 </span>            : 
+<span class="lineNum">    1164 </span>            : // atomic_is_lock_free
+<span class="lineNum">    1165 </span>            : 
+<span class="lineNum">    1166 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1167 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1168 </span>            : bool
+<span class="lineNum">    1169 </span>            : atomic_is_lock_free(const volatile atomic&lt;_Tp&gt;* __o) _NOEXCEPT
+<span class="lineNum">    1170 </span>            : {
+<span class="lineNum">    1171 </span>            :     return __o-&gt;is_lock_free();
+<span class="lineNum">    1172 </span>            : }
+<span class="lineNum">    1173 </span>            : 
+<span class="lineNum">    1174 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1175 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1176 </span>            : bool
+<span class="lineNum">    1177 </span>            : atomic_is_lock_free(const atomic&lt;_Tp&gt;* __o) _NOEXCEPT
+<span class="lineNum">    1178 </span>            : {
+<span class="lineNum">    1179 </span>            :     return __o-&gt;is_lock_free();
+<span class="lineNum">    1180 </span>            : }
+<span class="lineNum">    1181 </span>            : 
+<span class="lineNum">    1182 </span>            : // atomic_init
+<span class="lineNum">    1183 </span>            : 
+<span class="lineNum">    1184 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1185 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1186 </span>            : void
+<span class="lineNum">    1187 </span>            : atomic_init(volatile atomic&lt;_Tp&gt;* __o, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1188 </span>            : {
+<span class="lineNum">    1189 </span>            :     __c11_atomic_init(&amp;__o-&gt;__a_, __d);
+<span class="lineNum">    1190 </span>            : }
+<span class="lineNum">    1191 </span>            : 
+<span class="lineNum">    1192 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1193 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1194 </span>            : void
+<span class="lineNum">    1195 </span>            : atomic_init(atomic&lt;_Tp&gt;* __o, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1196 </span>            : {
+<span class="lineNum">    1197 </span>            :     __c11_atomic_init(&amp;__o-&gt;__a_, __d);
+<span class="lineNum">    1198 </span>            : }
+<span class="lineNum">    1199 </span>            : 
+<span class="lineNum">    1200 </span>            : // atomic_store
+<span class="lineNum">    1201 </span>            : 
+<span class="lineNum">    1202 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1203 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1204 </span>            : void
+<span class="lineNum">    1205 </span>            : atomic_store(volatile atomic&lt;_Tp&gt;* __o, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1206 </span>            : {
+<span class="lineNum">    1207 </span>            :     __o-&gt;store(__d);
+<span class="lineNum">    1208 </span>            : }
+<span class="lineNum">    1209 </span>            : 
+<span class="lineNum">    1210 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1211 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1212 </span>            : void
+<span class="lineNum">    1213 </span>            : atomic_store(atomic&lt;_Tp&gt;* __o, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1214 </span>            : {
+<span class="lineNum">    1215 </span>            :     __o-&gt;store(__d);
+<span class="lineNum">    1216 </span>            : }
+<span class="lineNum">    1217 </span>            : 
+<span class="lineNum">    1218 </span>            : // atomic_store_explicit
+<span class="lineNum">    1219 </span>            : 
+<span class="lineNum">    1220 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1221 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1222 </span>            : void
+<span class="lineNum">    1223 </span>            : atomic_store_explicit(volatile atomic&lt;_Tp&gt;* __o, _Tp __d, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1224 </span>            :   _LIBCPP_CHECK_STORE_MEMORY_ORDER(__m)
+<span class="lineNum">    1225 </span>            : {
+<span class="lineNum">    1226 </span>            :     __o-&gt;store(__d, __m);
+<span class="lineNum">    1227 </span>            : }
+<span class="lineNum">    1228 </span>            : 
+<span class="lineNum">    1229 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1230 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1231 </span>            : void
+<span class="lineNum">    1232 </span>            : atomic_store_explicit(atomic&lt;_Tp&gt;* __o, _Tp __d, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1233 </span>            :   _LIBCPP_CHECK_STORE_MEMORY_ORDER(__m)
+<span class="lineNum">    1234 </span>            : {
+<span class="lineNum">    1235 </span>            :     __o-&gt;store(__d, __m);
+<span class="lineNum">    1236 </span>            : }
+<span class="lineNum">    1237 </span>            : 
+<span class="lineNum">    1238 </span>            : // atomic_load
+<span class="lineNum">    1239 </span>            : 
+<span class="lineNum">    1240 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1241 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1242 </span>            : _Tp
+<span class="lineNum">    1243 </span>            : atomic_load(const volatile atomic&lt;_Tp&gt;* __o) _NOEXCEPT
+<span class="lineNum">    1244 </span>            : {
+<span class="lineNum">    1245 </span>            :     return __o-&gt;load();
+<span class="lineNum">    1246 </span>            : }
+<span class="lineNum">    1247 </span>            : 
+<span class="lineNum">    1248 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1249 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1250 </span>            : _Tp
+<span class="lineNum">    1251 </span>            : atomic_load(const atomic&lt;_Tp&gt;* __o) _NOEXCEPT
+<span class="lineNum">    1252 </span>            : {
+<span class="lineNum">    1253 </span>            :     return __o-&gt;load();
+<span class="lineNum">    1254 </span>            : }
+<span class="lineNum">    1255 </span>            : 
+<span class="lineNum">    1256 </span>            : // atomic_load_explicit
+<span class="lineNum">    1257 </span>            : 
+<span class="lineNum">    1258 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1259 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1260 </span>            : _Tp
+<span class="lineNum">    1261 </span>            : atomic_load_explicit(const volatile atomic&lt;_Tp&gt;* __o, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1262 </span>            :   _LIBCPP_CHECK_LOAD_MEMORY_ORDER(__m)
+<span class="lineNum">    1263 </span>            : {
+<span class="lineNum">    1264 </span>            :     return __o-&gt;load(__m);
+<span class="lineNum">    1265 </span>            : }
+<span class="lineNum">    1266 </span>            : 
+<span class="lineNum">    1267 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1268 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1269 </span>            : _Tp
+<span class="lineNum">    1270 </span>            : atomic_load_explicit(const atomic&lt;_Tp&gt;* __o, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1271 </span>            :   _LIBCPP_CHECK_LOAD_MEMORY_ORDER(__m)
+<span class="lineNum">    1272 </span>            : {
+<span class="lineNum">    1273 </span>            :     return __o-&gt;load(__m);
+<span class="lineNum">    1274 </span>            : }
+<span class="lineNum">    1275 </span>            : 
+<span class="lineNum">    1276 </span>            : // atomic_exchange
+<span class="lineNum">    1277 </span>            : 
+<span class="lineNum">    1278 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1279 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1280 </span>            : _Tp
+<span class="lineNum">    1281 </span>            : atomic_exchange(volatile atomic&lt;_Tp&gt;* __o, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1282 </span>            : {
+<span class="lineNum">    1283 </span>            :     return __o-&gt;exchange(__d);
+<span class="lineNum">    1284 </span>            : }
+<span class="lineNum">    1285 </span>            : 
+<span class="lineNum">    1286 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1287 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1288 </span>            : _Tp
+<span class="lineNum">    1289 </span>            : atomic_exchange(atomic&lt;_Tp&gt;* __o, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1290 </span>            : {
+<span class="lineNum">    1291 </span>            :     return __o-&gt;exchange(__d);
+<span class="lineNum">    1292 </span>            : }
+<span class="lineNum">    1293 </span>            : 
+<span class="lineNum">    1294 </span>            : // atomic_exchange_explicit
+<span class="lineNum">    1295 </span>            : 
+<span class="lineNum">    1296 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1297 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1298 </span>            : _Tp
+<span class="lineNum">    1299 </span>            : atomic_exchange_explicit(volatile atomic&lt;_Tp&gt;* __o, _Tp __d, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1300 </span>            : {
+<span class="lineNum">    1301 </span>            :     return __o-&gt;exchange(__d, __m);
+<span class="lineNum">    1302 </span>            : }
+<span class="lineNum">    1303 </span>            : 
+<span class="lineNum">    1304 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1305 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1306 </span>            : _Tp
+<span class="lineNum">    1307 </span>            : atomic_exchange_explicit(atomic&lt;_Tp&gt;* __o, _Tp __d, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1308 </span>            : {
+<span class="lineNum">    1309 </span>            :     return __o-&gt;exchange(__d, __m);
+<span class="lineNum">    1310 </span>            : }
+<span class="lineNum">    1311 </span>            : 
+<span class="lineNum">    1312 </span>            : // atomic_compare_exchange_weak
+<span class="lineNum">    1313 </span>            : 
+<span class="lineNum">    1314 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1315 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1316 </span>            : bool
+<span class="lineNum">    1317 </span>            : atomic_compare_exchange_weak(volatile atomic&lt;_Tp&gt;* __o, _Tp* __e, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1318 </span>            : {
+<span class="lineNum">    1319 </span>            :     return __o-&gt;compare_exchange_weak(*__e, __d);
+<span class="lineNum">    1320 </span>            : }
+<span class="lineNum">    1321 </span>            : 
+<span class="lineNum">    1322 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1323 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1324 </span>            : bool
+<span class="lineNum">    1325 </span>            : atomic_compare_exchange_weak(atomic&lt;_Tp&gt;* __o, _Tp* __e, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1326 </span>            : {
+<span class="lineNum">    1327 </span>            :     return __o-&gt;compare_exchange_weak(*__e, __d);
+<span class="lineNum">    1328 </span>            : }
+<span class="lineNum">    1329 </span>            : 
+<span class="lineNum">    1330 </span>            : // atomic_compare_exchange_strong
+<span class="lineNum">    1331 </span>            : 
+<span class="lineNum">    1332 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1333 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1334 </span>            : bool
+<span class="lineNum">    1335 </span>            : atomic_compare_exchange_strong(volatile atomic&lt;_Tp&gt;* __o, _Tp* __e, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1336 </span>            : {
+<span class="lineNum">    1337 </span>            :     return __o-&gt;compare_exchange_strong(*__e, __d);
+<span class="lineNum">    1338 </span>            : }
+<span class="lineNum">    1339 </span>            : 
+<span class="lineNum">    1340 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1341 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1342 </span>            : bool
+<span class="lineNum">    1343 </span>            : atomic_compare_exchange_strong(atomic&lt;_Tp&gt;* __o, _Tp* __e, _Tp __d) _NOEXCEPT
+<span class="lineNum">    1344 </span>            : {
+<span class="lineNum">    1345 </span>            :     return __o-&gt;compare_exchange_strong(*__e, __d);
+<span class="lineNum">    1346 </span>            : }
+<span class="lineNum">    1347 </span>            : 
+<span class="lineNum">    1348 </span>            : // atomic_compare_exchange_weak_explicit
+<span class="lineNum">    1349 </span>            : 
+<span class="lineNum">    1350 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1351 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1352 </span>            : bool
+<span class="lineNum">    1353 </span>            : atomic_compare_exchange_weak_explicit(volatile atomic&lt;_Tp&gt;* __o, _Tp* __e,
+<span class="lineNum">    1354 </span>            :                                       _Tp __d,
+<span class="lineNum">    1355 </span>            :                                       memory_order __s, memory_order __f) _NOEXCEPT
+<span class="lineNum">    1356 </span>            :   _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
+<span class="lineNum">    1357 </span>            : {
+<span class="lineNum">    1358 </span>            :     return __o-&gt;compare_exchange_weak(*__e, __d, __s, __f);
+<span class="lineNum">    1359 </span>            : }
+<span class="lineNum">    1360 </span>            : 
+<span class="lineNum">    1361 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1362 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1363 </span>            : bool
+<span class="lineNum">    1364 </span>            : atomic_compare_exchange_weak_explicit(atomic&lt;_Tp&gt;* __o, _Tp* __e, _Tp __d,
+<span class="lineNum">    1365 </span>            :                                       memory_order __s, memory_order __f) _NOEXCEPT
+<span class="lineNum">    1366 </span>            :   _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
+<span class="lineNum">    1367 </span>            : {
+<span class="lineNum">    1368 </span>            :     return __o-&gt;compare_exchange_weak(*__e, __d, __s, __f);
+<span class="lineNum">    1369 </span>            : }
+<span class="lineNum">    1370 </span>            : 
+<span class="lineNum">    1371 </span>            : // atomic_compare_exchange_strong_explicit
+<span class="lineNum">    1372 </span>            : 
+<span class="lineNum">    1373 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1374 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1375 </span>            : bool
+<span class="lineNum">    1376 </span>            : atomic_compare_exchange_strong_explicit(volatile atomic&lt;_Tp&gt;* __o,
+<span class="lineNum">    1377 </span>            :                                         _Tp* __e, _Tp __d,
+<span class="lineNum">    1378 </span>            :                                         memory_order __s, memory_order __f) _NOEXCEPT
+<span class="lineNum">    1379 </span>            :   _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
+<span class="lineNum">    1380 </span>            : {
+<span class="lineNum">    1381 </span>            :     return __o-&gt;compare_exchange_strong(*__e, __d, __s, __f);
+<span class="lineNum">    1382 </span>            : }
+<span class="lineNum">    1383 </span>            : 
+<span class="lineNum">    1384 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1385 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1386 </span>            : bool
+<span class="lineNum">    1387 </span>            : atomic_compare_exchange_strong_explicit(atomic&lt;_Tp&gt;* __o, _Tp* __e,
+<span class="lineNum">    1388 </span>            :                                         _Tp __d,
+<span class="lineNum">    1389 </span>            :                                         memory_order __s, memory_order __f) _NOEXCEPT
+<span class="lineNum">    1390 </span>            :   _LIBCPP_CHECK_EXCHANGE_MEMORY_ORDER(__s, __f)
+<span class="lineNum">    1391 </span>            : {
+<span class="lineNum">    1392 </span>            :     return __o-&gt;compare_exchange_strong(*__e, __d, __s, __f);
+<span class="lineNum">    1393 </span>            : }
+<span class="lineNum">    1394 </span>            : 
+<span class="lineNum">    1395 </span>            : // atomic_fetch_add
+<span class="lineNum">    1396 </span>            : 
+<span class="lineNum">    1397 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1398 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1399 </span>            : typename enable_if
+<span class="lineNum">    1400 </span>            : &lt;
+<span class="lineNum">    1401 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1402 </span>            :     _Tp
+<span class="lineNum">    1403 </span>            : &gt;::type
+<span class="lineNum">    1404 </span>            : atomic_fetch_add(volatile atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1405 </span>            : {
+<span class="lineNum">    1406 </span>            :     return __o-&gt;fetch_add(__op);
+<span class="lineNum">    1407 </span>            : }
+<span class="lineNum">    1408 </span>            : 
+<span class="lineNum">    1409 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1410 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1411 </span>            : typename enable_if
+<span class="lineNum">    1412 </span>            : &lt;
+<span class="lineNum">    1413 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1414 </span>            :     _Tp
+<span class="lineNum">    1415 </span>            : &gt;::type
+<span class="lineNum">    1416 </span>            : atomic_fetch_add(atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1417 </span>            : {
+<span class="lineNum">    1418 </span>            :     return __o-&gt;fetch_add(__op);
+<span class="lineNum">    1419 </span>            : }
+<span class="lineNum">    1420 </span>            : 
+<span class="lineNum">    1421 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1422 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1423 </span>            : _Tp*
+<span class="lineNum">    1424 </span>            : atomic_fetch_add(volatile atomic&lt;_Tp*&gt;* __o, ptrdiff_t __op) _NOEXCEPT
+<span class="lineNum">    1425 </span>            : {
+<span class="lineNum">    1426 </span>            :     return __o-&gt;fetch_add(__op);
+<span class="lineNum">    1427 </span>            : }
+<span class="lineNum">    1428 </span>            : 
+<span class="lineNum">    1429 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1430 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1431 </span>            : _Tp*
+<span class="lineNum">    1432 </span>            : atomic_fetch_add(atomic&lt;_Tp*&gt;* __o, ptrdiff_t __op) _NOEXCEPT
+<span class="lineNum">    1433 </span>            : {
+<span class="lineNum">    1434 </span>            :     return __o-&gt;fetch_add(__op);
+<span class="lineNum">    1435 </span>            : }
+<span class="lineNum">    1436 </span>            : 
+<span class="lineNum">    1437 </span>            : // atomic_fetch_add_explicit
+<span class="lineNum">    1438 </span>            : 
+<span class="lineNum">    1439 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1440 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1441 </span>            : typename enable_if
+<span class="lineNum">    1442 </span>            : &lt;
+<span class="lineNum">    1443 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1444 </span>            :     _Tp
+<span class="lineNum">    1445 </span>            : &gt;::type
+<span class="lineNum">    1446 </span>            : atomic_fetch_add_explicit(volatile atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1447 </span>            : {
+<span class="lineNum">    1448 </span>            :     return __o-&gt;fetch_add(__op, __m);
+<span class="lineNum">    1449 </span>            : }
+<span class="lineNum">    1450 </span>            : 
+<span class="lineNum">    1451 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1452 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1453 </span>            : typename enable_if
+<span class="lineNum">    1454 </span>            : &lt;
+<span class="lineNum">    1455 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1456 </span>            :     _Tp
+<span class="lineNum">    1457 </span>            : &gt;::type
+<span class="lineNum">    1458 </span>            : atomic_fetch_add_explicit(atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1459 </span>            : {
+<span class="lineNum">    1460 </span>            :     return __o-&gt;fetch_add(__op, __m);
+<span class="lineNum">    1461 </span>            : }
+<span class="lineNum">    1462 </span>            : 
+<span class="lineNum">    1463 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1464 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1465 </span>            : _Tp*
+<span class="lineNum">    1466 </span>            : atomic_fetch_add_explicit(volatile atomic&lt;_Tp*&gt;* __o, ptrdiff_t __op,
+<span class="lineNum">    1467 </span>            :                           memory_order __m) _NOEXCEPT
+<span class="lineNum">    1468 </span>            : {
+<span class="lineNum">    1469 </span>            :     return __o-&gt;fetch_add(__op, __m);
+<span class="lineNum">    1470 </span>            : }
+<span class="lineNum">    1471 </span>            : 
+<span class="lineNum">    1472 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1473 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1474 </span>            : _Tp*
+<span class="lineNum">    1475 </span>            : atomic_fetch_add_explicit(atomic&lt;_Tp*&gt;* __o, ptrdiff_t __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1476 </span>            : {
+<span class="lineNum">    1477 </span>            :     return __o-&gt;fetch_add(__op, __m);
+<span class="lineNum">    1478 </span>            : }
+<span class="lineNum">    1479 </span>            : 
+<span class="lineNum">    1480 </span>            : // atomic_fetch_sub
+<span class="lineNum">    1481 </span>            : 
+<span class="lineNum">    1482 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1483 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1484 </span>            : typename enable_if
+<span class="lineNum">    1485 </span>            : &lt;
+<span class="lineNum">    1486 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1487 </span>            :     _Tp
+<span class="lineNum">    1488 </span>            : &gt;::type
+<span class="lineNum">    1489 </span>            : atomic_fetch_sub(volatile atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1490 </span>            : {
+<span class="lineNum">    1491 </span>            :     return __o-&gt;fetch_sub(__op);
+<span class="lineNum">    1492 </span>            : }
+<span class="lineNum">    1493 </span>            : 
+<span class="lineNum">    1494 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1495 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1496 </span>            : typename enable_if
+<span class="lineNum">    1497 </span>            : &lt;
+<span class="lineNum">    1498 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1499 </span>            :     _Tp
+<span class="lineNum">    1500 </span>            : &gt;::type
+<span class="lineNum">    1501 </span>            : atomic_fetch_sub(atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1502 </span>            : {
+<span class="lineNum">    1503 </span>            :     return __o-&gt;fetch_sub(__op);
+<span class="lineNum">    1504 </span>            : }
+<span class="lineNum">    1505 </span>            : 
+<span class="lineNum">    1506 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1507 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1508 </span>            : _Tp*
+<span class="lineNum">    1509 </span>            : atomic_fetch_sub(volatile atomic&lt;_Tp*&gt;* __o, ptrdiff_t __op) _NOEXCEPT
+<span class="lineNum">    1510 </span>            : {
+<span class="lineNum">    1511 </span>            :     return __o-&gt;fetch_sub(__op);
+<span class="lineNum">    1512 </span>            : }
+<span class="lineNum">    1513 </span>            : 
+<span class="lineNum">    1514 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1515 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1516 </span>            : _Tp*
+<span class="lineNum">    1517 </span>            : atomic_fetch_sub(atomic&lt;_Tp*&gt;* __o, ptrdiff_t __op) _NOEXCEPT
+<span class="lineNum">    1518 </span>            : {
+<span class="lineNum">    1519 </span>            :     return __o-&gt;fetch_sub(__op);
+<span class="lineNum">    1520 </span>            : }
+<span class="lineNum">    1521 </span>            : 
+<span class="lineNum">    1522 </span>            : // atomic_fetch_sub_explicit
+<span class="lineNum">    1523 </span>            : 
+<span class="lineNum">    1524 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1525 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1526 </span>            : typename enable_if
+<span class="lineNum">    1527 </span>            : &lt;
+<span class="lineNum">    1528 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1529 </span>            :     _Tp
+<span class="lineNum">    1530 </span>            : &gt;::type
+<span class="lineNum">    1531 </span>            : atomic_fetch_sub_explicit(volatile atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1532 </span>            : {
+<span class="lineNum">    1533 </span>            :     return __o-&gt;fetch_sub(__op, __m);
+<span class="lineNum">    1534 </span>            : }
+<span class="lineNum">    1535 </span>            : 
+<span class="lineNum">    1536 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1537 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1538 </span>            : typename enable_if
+<span class="lineNum">    1539 </span>            : &lt;
+<span class="lineNum">    1540 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1541 </span>            :     _Tp
+<span class="lineNum">    1542 </span>            : &gt;::type
+<span class="lineNum">    1543 </span>            : atomic_fetch_sub_explicit(atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1544 </span>            : {
+<span class="lineNum">    1545 </span>            :     return __o-&gt;fetch_sub(__op, __m);
+<span class="lineNum">    1546 </span>            : }
+<span class="lineNum">    1547 </span>            : 
+<span class="lineNum">    1548 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1549 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1550 </span>            : _Tp*
+<span class="lineNum">    1551 </span>            : atomic_fetch_sub_explicit(volatile atomic&lt;_Tp*&gt;* __o, ptrdiff_t __op,
+<span class="lineNum">    1552 </span>            :                           memory_order __m) _NOEXCEPT
+<span class="lineNum">    1553 </span>            : {
+<span class="lineNum">    1554 </span>            :     return __o-&gt;fetch_sub(__op, __m);
+<span class="lineNum">    1555 </span>            : }
+<span class="lineNum">    1556 </span>            : 
+<span class="lineNum">    1557 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1558 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1559 </span>            : _Tp*
+<span class="lineNum">    1560 </span>            : atomic_fetch_sub_explicit(atomic&lt;_Tp*&gt;* __o, ptrdiff_t __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1561 </span>            : {
+<span class="lineNum">    1562 </span>            :     return __o-&gt;fetch_sub(__op, __m);
+<span class="lineNum">    1563 </span>            : }
+<span class="lineNum">    1564 </span>            : 
+<span class="lineNum">    1565 </span>            : // atomic_fetch_and
+<span class="lineNum">    1566 </span>            : 
+<span class="lineNum">    1567 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1568 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1569 </span>            : typename enable_if
+<span class="lineNum">    1570 </span>            : &lt;
+<span class="lineNum">    1571 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1572 </span>            :     _Tp
+<span class="lineNum">    1573 </span>            : &gt;::type
+<span class="lineNum">    1574 </span>            : atomic_fetch_and(volatile atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1575 </span>            : {
+<span class="lineNum">    1576 </span>            :     return __o-&gt;fetch_and(__op);
+<span class="lineNum">    1577 </span>            : }
+<span class="lineNum">    1578 </span>            : 
+<span class="lineNum">    1579 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1580 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1581 </span>            : typename enable_if
+<span class="lineNum">    1582 </span>            : &lt;
+<span class="lineNum">    1583 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1584 </span>            :     _Tp
+<span class="lineNum">    1585 </span>            : &gt;::type
+<span class="lineNum">    1586 </span>            : atomic_fetch_and(atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1587 </span>            : {
+<span class="lineNum">    1588 </span>            :     return __o-&gt;fetch_and(__op);
+<span class="lineNum">    1589 </span>            : }
+<span class="lineNum">    1590 </span>            : 
+<span class="lineNum">    1591 </span>            : // atomic_fetch_and_explicit
+<span class="lineNum">    1592 </span>            : 
+<span class="lineNum">    1593 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1594 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1595 </span>            : typename enable_if
+<span class="lineNum">    1596 </span>            : &lt;
+<span class="lineNum">    1597 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1598 </span>            :     _Tp
+<span class="lineNum">    1599 </span>            : &gt;::type
+<span class="lineNum">    1600 </span>            : atomic_fetch_and_explicit(volatile atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1601 </span>            : {
+<span class="lineNum">    1602 </span>            :     return __o-&gt;fetch_and(__op, __m);
+<span class="lineNum">    1603 </span>            : }
+<span class="lineNum">    1604 </span>            : 
+<span class="lineNum">    1605 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1606 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1607 </span>            : typename enable_if
+<span class="lineNum">    1608 </span>            : &lt;
+<span class="lineNum">    1609 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1610 </span>            :     _Tp
+<span class="lineNum">    1611 </span>            : &gt;::type
+<span class="lineNum">    1612 </span>            : atomic_fetch_and_explicit(atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1613 </span>            : {
+<span class="lineNum">    1614 </span>            :     return __o-&gt;fetch_and(__op, __m);
+<span class="lineNum">    1615 </span>            : }
+<span class="lineNum">    1616 </span>            : 
+<span class="lineNum">    1617 </span>            : // atomic_fetch_or
+<span class="lineNum">    1618 </span>            : 
+<span class="lineNum">    1619 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1620 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1621 </span>            : typename enable_if
+<span class="lineNum">    1622 </span>            : &lt;
+<span class="lineNum">    1623 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1624 </span>            :     _Tp
+<span class="lineNum">    1625 </span>            : &gt;::type
+<span class="lineNum">    1626 </span>            : atomic_fetch_or(volatile atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1627 </span>            : {
+<span class="lineNum">    1628 </span>            :     return __o-&gt;fetch_or(__op);
+<span class="lineNum">    1629 </span>            : }
+<span class="lineNum">    1630 </span>            : 
+<span class="lineNum">    1631 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1632 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1633 </span>            : typename enable_if
+<span class="lineNum">    1634 </span>            : &lt;
+<span class="lineNum">    1635 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1636 </span>            :     _Tp
+<span class="lineNum">    1637 </span>            : &gt;::type
+<span class="lineNum">    1638 </span>            : atomic_fetch_or(atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1639 </span>            : {
+<span class="lineNum">    1640 </span>            :     return __o-&gt;fetch_or(__op);
+<span class="lineNum">    1641 </span>            : }
+<span class="lineNum">    1642 </span>            : 
+<span class="lineNum">    1643 </span>            : // atomic_fetch_or_explicit
+<span class="lineNum">    1644 </span>            : 
+<span class="lineNum">    1645 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1646 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1647 </span>            : typename enable_if
+<span class="lineNum">    1648 </span>            : &lt;
+<span class="lineNum">    1649 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1650 </span>            :     _Tp
+<span class="lineNum">    1651 </span>            : &gt;::type
+<span class="lineNum">    1652 </span>            : atomic_fetch_or_explicit(volatile atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1653 </span>            : {
+<span class="lineNum">    1654 </span>            :     return __o-&gt;fetch_or(__op, __m);
+<span class="lineNum">    1655 </span>            : }
+<span class="lineNum">    1656 </span>            : 
+<span class="lineNum">    1657 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1658 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1659 </span>            : typename enable_if
+<span class="lineNum">    1660 </span>            : &lt;
+<span class="lineNum">    1661 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1662 </span>            :     _Tp
+<span class="lineNum">    1663 </span>            : &gt;::type
+<span class="lineNum">    1664 </span>            : atomic_fetch_or_explicit(atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1665 </span>            : {
+<span class="lineNum">    1666 </span>            :     return __o-&gt;fetch_or(__op, __m);
+<span class="lineNum">    1667 </span>            : }
+<span class="lineNum">    1668 </span>            : 
+<span class="lineNum">    1669 </span>            : // atomic_fetch_xor
+<span class="lineNum">    1670 </span>            : 
+<span class="lineNum">    1671 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1672 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1673 </span>            : typename enable_if
+<span class="lineNum">    1674 </span>            : &lt;
+<span class="lineNum">    1675 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1676 </span>            :     _Tp
+<span class="lineNum">    1677 </span>            : &gt;::type
+<span class="lineNum">    1678 </span>            : atomic_fetch_xor(volatile atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1679 </span>            : {
+<span class="lineNum">    1680 </span>            :     return __o-&gt;fetch_xor(__op);
+<span class="lineNum">    1681 </span>            : }
+<span class="lineNum">    1682 </span>            : 
+<span class="lineNum">    1683 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1684 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1685 </span>            : typename enable_if
+<span class="lineNum">    1686 </span>            : &lt;
+<span class="lineNum">    1687 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1688 </span>            :     _Tp
+<span class="lineNum">    1689 </span>            : &gt;::type
+<span class="lineNum">    1690 </span>            : atomic_fetch_xor(atomic&lt;_Tp&gt;* __o, _Tp __op) _NOEXCEPT
+<span class="lineNum">    1691 </span>            : {
+<span class="lineNum">    1692 </span>            :     return __o-&gt;fetch_xor(__op);
+<span class="lineNum">    1693 </span>            : }
+<span class="lineNum">    1694 </span>            : 
+<span class="lineNum">    1695 </span>            : // atomic_fetch_xor_explicit
+<span class="lineNum">    1696 </span>            : 
+<span class="lineNum">    1697 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1698 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1699 </span>            : typename enable_if
+<span class="lineNum">    1700 </span>            : &lt;
+<span class="lineNum">    1701 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1702 </span>            :     _Tp
+<span class="lineNum">    1703 </span>            : &gt;::type
+<span class="lineNum">    1704 </span>            : atomic_fetch_xor_explicit(volatile atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1705 </span>            : {
+<span class="lineNum">    1706 </span>            :     return __o-&gt;fetch_xor(__op, __m);
+<span class="lineNum">    1707 </span>            : }
+<span class="lineNum">    1708 </span>            : 
+<span class="lineNum">    1709 </span>            : template &lt;class _Tp&gt;
+<span class="lineNum">    1710 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1711 </span>            : typename enable_if
+<span class="lineNum">    1712 </span>            : &lt;
+<span class="lineNum">    1713 </span>            :     is_integral&lt;_Tp&gt;::value &amp;&amp; !is_same&lt;_Tp, bool&gt;::value,
+<span class="lineNum">    1714 </span>            :     _Tp
+<span class="lineNum">    1715 </span>            : &gt;::type
+<span class="lineNum">    1716 </span>            : atomic_fetch_xor_explicit(atomic&lt;_Tp&gt;* __o, _Tp __op, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1717 </span>            : {
+<span class="lineNum">    1718 </span>            :     return __o-&gt;fetch_xor(__op, __m);
+<span class="lineNum">    1719 </span>            : }
+<span class="lineNum">    1720 </span>            : 
+<span class="lineNum">    1721 </span>            : // flag type and operations
+<span class="lineNum">    1722 </span>            : 
+<span class="lineNum">    1723 </span>            : typedef struct atomic_flag
+<span class="lineNum">    1724 </span>            : {
+<span class="lineNum">    1725 </span>            :     _Atomic(bool) __a_;
+<span class="lineNum">    1726 </span>            : 
+<span class="lineNum">    1727 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1728 </span>            :     bool test_and_set(memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">    1729 </span>            :         {return __c11_atomic_exchange(&amp;__a_, true, __m);}
+<span class="lineNum">    1730 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1731 </span>            :     bool test_and_set(memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1732 </span>            :         {return __c11_atomic_exchange(&amp;__a_, true, __m);}
+<span class="lineNum">    1733 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1734 </span>            :     void clear(memory_order __m = memory_order_seq_cst) volatile _NOEXCEPT
+<span class="lineNum">    1735 </span>            :         {__c11_atomic_store(&amp;__a_, false, __m);}
+<span class="lineNum">    1736 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1737 </span>            :     void clear(memory_order __m = memory_order_seq_cst) _NOEXCEPT
+<span class="lineNum">    1738 </span>            :         {__c11_atomic_store(&amp;__a_, false, __m);}
+<span class="lineNum">    1739 </span>            : 
+<span class="lineNum">    1740 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1741 </span>            : #ifndef _LIBCPP_CXX03_LANG
+<span class="lineNum">    1742 </span>            :     atomic_flag() _NOEXCEPT = default;
+<span class="lineNum">    1743 </span>            : #else
+<span class="lineNum">    1744 </span>            :     atomic_flag() _NOEXCEPT : __a_() {}
+<span class="lineNum">    1745 </span>            : #endif // _LIBCPP_CXX03_LANG
+<span class="lineNum">    1746 </span>            : 
+<span class="lineNum">    1747 </span>            :     _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1748 </span>            :     atomic_flag(bool __b) _NOEXCEPT : __a_(__b) {} // EXTENSION
+<span class="lineNum">    1749 </span>            : 
+<span class="lineNum">    1750 </span>            : #ifndef _LIBCPP_CXX03_LANG
+<span class="lineNum">    1751 </span>            :     atomic_flag(const atomic_flag&amp;) = delete;
+<span class="lineNum">    1752 </span>            :     atomic_flag&amp; operator=(const atomic_flag&amp;) = delete;
+<span class="lineNum">    1753 </span>            :     atomic_flag&amp; operator=(const atomic_flag&amp;) volatile = delete;
+<span class="lineNum">    1754 </span>            : #else
+<span class="lineNum">    1755 </span>            : private:
+<span class="lineNum">    1756 </span>            :     atomic_flag(const atomic_flag&amp;);
+<span class="lineNum">    1757 </span>            :     atomic_flag&amp; operator=(const atomic_flag&amp;);
+<span class="lineNum">    1758 </span>            :     atomic_flag&amp; operator=(const atomic_flag&amp;) volatile;
+<span class="lineNum">    1759 </span>            : #endif
+<span class="lineNum">    1760 </span>            : } atomic_flag;
+<span class="lineNum">    1761 </span>            : 
+<span class="lineNum">    1762 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1763 </span>            : bool
+<span class="lineNum">    1764 </span>            : atomic_flag_test_and_set(volatile atomic_flag* __o) _NOEXCEPT
+<span class="lineNum">    1765 </span>            : {
+<span class="lineNum">    1766 </span>            :     return __o-&gt;test_and_set();
+<span class="lineNum">    1767 </span>            : }
+<span class="lineNum">    1768 </span>            : 
+<span class="lineNum">    1769 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1770 </span>            : bool
+<span class="lineNum">    1771 </span>            : atomic_flag_test_and_set(atomic_flag* __o) _NOEXCEPT
+<span class="lineNum">    1772 </span>            : {
+<span class="lineNum">    1773 </span>            :     return __o-&gt;test_and_set();
+<span class="lineNum">    1774 </span>            : }
+<span class="lineNum">    1775 </span>            : 
+<span class="lineNum">    1776 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1777 </span>            : bool
+<span class="lineNum">    1778 </span>            : atomic_flag_test_and_set_explicit(volatile atomic_flag* __o, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1779 </span>            : {
+<span class="lineNum">    1780 </span>            :     return __o-&gt;test_and_set(__m);
+<span class="lineNum">    1781 </span>            : }
+<span class="lineNum">    1782 </span>            : 
+<span class="lineNum">    1783 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1784 </span>            : bool
+<span class="lineNum">    1785 </span>            : atomic_flag_test_and_set_explicit(atomic_flag* __o, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1786 </span>            : {
+<span class="lineNum">    1787 </span>            :     return __o-&gt;test_and_set(__m);
+<span class="lineNum">    1788 </span>            : }
+<span class="lineNum">    1789 </span>            : 
+<span class="lineNum">    1790 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1791 </span>            : void
+<span class="lineNum">    1792 </span>            : atomic_flag_clear(volatile atomic_flag* __o) _NOEXCEPT
+<span class="lineNum">    1793 </span>            : {
+<span class="lineNum">    1794 </span>            :     __o-&gt;clear();
+<span class="lineNum">    1795 </span>            : }
+<span class="lineNum">    1796 </span>            : 
+<span class="lineNum">    1797 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1798 </span>            : void
+<span class="lineNum">    1799 </span>            : atomic_flag_clear(atomic_flag* __o) _NOEXCEPT
+<span class="lineNum">    1800 </span>            : {
+<span class="lineNum">    1801 </span>            :     __o-&gt;clear();
+<span class="lineNum">    1802 </span>            : }
+<span class="lineNum">    1803 </span>            : 
+<span class="lineNum">    1804 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1805 </span>            : void
+<span class="lineNum">    1806 </span>            : atomic_flag_clear_explicit(volatile atomic_flag* __o, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1807 </span>            : {
+<span class="lineNum">    1808 </span>            :     __o-&gt;clear(__m);
+<span class="lineNum">    1809 </span>            : }
+<span class="lineNum">    1810 </span>            : 
+<span class="lineNum">    1811 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1812 </span>            : void
+<span class="lineNum">    1813 </span>            : atomic_flag_clear_explicit(atomic_flag* __o, memory_order __m) _NOEXCEPT
+<span class="lineNum">    1814 </span>            : {
+<span class="lineNum">    1815 </span>            :     __o-&gt;clear(__m);
+<span class="lineNum">    1816 </span>            : }
+<span class="lineNum">    1817 </span>            : 
+<span class="lineNum">    1818 </span>            : // fences
+<span class="lineNum">    1819 </span>            : 
+<span class="lineNum">    1820 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1821 </span>            : void
+<span class="lineNum">    1822 </span>            : atomic_thread_fence(memory_order __m) _NOEXCEPT
+<span class="lineNum">    1823 </span>            : {
+<span class="lineNum">    1824 </span>            :     __c11_atomic_thread_fence(__m);
+<span class="lineNum">    1825 </span>            : }
+<span class="lineNum">    1826 </span>            : 
+<span class="lineNum">    1827 </span>            : inline _LIBCPP_INLINE_VISIBILITY
+<span class="lineNum">    1828 </span>            : void
+<span class="lineNum">    1829 </span>            : atomic_signal_fence(memory_order __m) _NOEXCEPT
+<span class="lineNum">    1830 </span>            : {
+<span class="lineNum">    1831 </span>            :     __c11_atomic_signal_fence(__m);
+<span class="lineNum">    1832 </span>            : }
+<span class="lineNum">    1833 </span>            : 
+<span class="lineNum">    1834 </span>            : // Atomics for standard typedef types
+<span class="lineNum">    1835 </span>            : 
+<span class="lineNum">    1836 </span>            : typedef atomic&lt;bool&gt;               atomic_bool;
+<span class="lineNum">    1837 </span>            : typedef atomic&lt;char&gt;               atomic_char;
+<span class="lineNum">    1838 </span>            : typedef atomic&lt;signed char&gt;        atomic_schar;
+<span class="lineNum">    1839 </span>            : typedef atomic&lt;unsigned char&gt;      atomic_uchar;
+<span class="lineNum">    1840 </span>            : typedef atomic&lt;short&gt;              atomic_short;
+<span class="lineNum">    1841 </span>            : typedef atomic&lt;unsigned short&gt;     atomic_ushort;
+<span class="lineNum">    1842 </span>            : typedef atomic&lt;int&gt;                atomic_int;
+<span class="lineNum">    1843 </span>            : typedef atomic&lt;unsigned int&gt;       atomic_uint;
+<span class="lineNum">    1844 </span>            : typedef atomic&lt;long&gt;               atomic_long;
+<span class="lineNum">    1845 </span>            : typedef atomic&lt;unsigned long&gt;      atomic_ulong;
+<span class="lineNum">    1846 </span>            : typedef atomic&lt;long long&gt;          atomic_llong;
+<span class="lineNum">    1847 </span>            : typedef atomic&lt;unsigned long long&gt; atomic_ullong;
+<span class="lineNum">    1848 </span>            : typedef atomic&lt;char16_t&gt;           atomic_char16_t;
+<span class="lineNum">    1849 </span>            : typedef atomic&lt;char32_t&gt;           atomic_char32_t;
+<span class="lineNum">    1850 </span>            : typedef atomic&lt;wchar_t&gt;            atomic_wchar_t;
+<span class="lineNum">    1851 </span>            : 
+<span class="lineNum">    1852 </span>            : typedef atomic&lt;int_least8_t&gt;   atomic_int_least8_t;
+<span class="lineNum">    1853 </span>            : typedef atomic&lt;uint_least8_t&gt;  atomic_uint_least8_t;
+<span class="lineNum">    1854 </span>            : typedef atomic&lt;int_least16_t&gt;  atomic_int_least16_t;
+<span class="lineNum">    1855 </span>            : typedef atomic&lt;uint_least16_t&gt; atomic_uint_least16_t;
+<span class="lineNum">    1856 </span>            : typedef atomic&lt;int_least32_t&gt;  atomic_int_least32_t;
+<span class="lineNum">    1857 </span>            : typedef atomic&lt;uint_least32_t&gt; atomic_uint_least32_t;
+<span class="lineNum">    1858 </span>            : typedef atomic&lt;int_least64_t&gt;  atomic_int_least64_t;
+<span class="lineNum">    1859 </span>            : typedef atomic&lt;uint_least64_t&gt; atomic_uint_least64_t;
+<span class="lineNum">    1860 </span>            : 
+<span class="lineNum">    1861 </span>            : typedef atomic&lt;int_fast8_t&gt;   atomic_int_fast8_t;
+<span class="lineNum">    1862 </span>            : typedef atomic&lt;uint_fast8_t&gt;  atomic_uint_fast8_t;
+<span class="lineNum">    1863 </span>            : typedef atomic&lt;int_fast16_t&gt;  atomic_int_fast16_t;
+<span class="lineNum">    1864 </span>            : typedef atomic&lt;uint_fast16_t&gt; atomic_uint_fast16_t;
+<span class="lineNum">    1865 </span>            : typedef atomic&lt;int_fast32_t&gt;  atomic_int_fast32_t;
+<span class="lineNum">    1866 </span>            : typedef atomic&lt;uint_fast32_t&gt; atomic_uint_fast32_t;
+<span class="lineNum">    1867 </span>            : typedef atomic&lt;int_fast64_t&gt;  atomic_int_fast64_t;
+<span class="lineNum">    1868 </span>            : typedef atomic&lt;uint_fast64_t&gt; atomic_uint_fast64_t;
+<span class="lineNum">    1869 </span>            : 
+<span class="lineNum">    1870 </span>            : typedef atomic&lt; int8_t&gt;  atomic_int8_t;
+<span class="lineNum">    1871 </span>            : typedef atomic&lt;uint8_t&gt;  atomic_uint8_t;
+<span class="lineNum">    1872 </span>            : typedef atomic&lt; int16_t&gt; atomic_int16_t;
+<span class="lineNum">    1873 </span>            : typedef atomic&lt;uint16_t&gt; atomic_uint16_t;
+<span class="lineNum">    1874 </span>            : typedef atomic&lt; int32_t&gt; atomic_int32_t;
+<span class="lineNum">    1875 </span>            : typedef atomic&lt;uint32_t&gt; atomic_uint32_t;
+<span class="lineNum">    1876 </span>            : typedef atomic&lt; int64_t&gt; atomic_int64_t;
+<span class="lineNum">    1877 </span>            : typedef atomic&lt;uint64_t&gt; atomic_uint64_t;
+<span class="lineNum">    1878 </span>            : 
+<span class="lineNum">    1879 </span>            : typedef atomic&lt;intptr_t&gt;  atomic_intptr_t;
+<span class="lineNum">    1880 </span>            : typedef atomic&lt;uintptr_t&gt; atomic_uintptr_t;
+<span class="lineNum">    1881 </span>            : typedef atomic&lt;size_t&gt;    atomic_size_t;
+<span class="lineNum">    1882 </span>            : typedef atomic&lt;ptrdiff_t&gt; atomic_ptrdiff_t;
+<span class="lineNum">    1883 </span>            : typedef atomic&lt;intmax_t&gt;  atomic_intmax_t;
+<span class="lineNum">    1884 </span>            : typedef atomic&lt;uintmax_t&gt; atomic_uintmax_t;
+<span class="lineNum">    1885 </span>            : 
+<span class="lineNum">    1886 </span>            : #define ATOMIC_FLAG_INIT {false}
+<span class="lineNum">    1887 </span>            : #define ATOMIC_VAR_INIT(__v) {__v}
+<span class="lineNum">    1888 </span>            : 
+<span class="lineNum">    1889 </span>            : _LIBCPP_END_NAMESPACE_STD
+<span class="lineNum">    1890 </span>            : 
+<span class="lineNum">    1891 </span>            : #endif  // _LIBCPP_ATOMIC
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../../../../../../../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

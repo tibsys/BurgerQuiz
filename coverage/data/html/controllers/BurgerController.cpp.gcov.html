@@ -1,0 +1,328 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html lang="en">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>LCOV - coverage-filtered.info - controllers/BurgerController.cpp</title>
+  <link rel="stylesheet" type="text/css" href="../gcov.css">
+</head>
+
+<body>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="title">LCOV - code coverage report</td></tr>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+
+    <tr>
+      <td width="100%">
+        <table cellpadding=1 border=0 width="100%">
+          <tr>
+            <td width="10%" class="headerItem">Current view:</td>
+            <td width="35%" class="headerValue"><a href="../index.html">top level</a> - <a href="index.html">controllers</a> - BurgerController.cpp<span style="font-size: 80%;"> (source / <a href="BurgerController.cpp.func-sort-c.html">functions</a>)</span></td>
+            <td width="5%"></td>
+            <td width="15%"></td>
+            <td width="10%" class="headerCovTableHead">Hit</td>
+            <td width="10%" class="headerCovTableHead">Total</td>
+            <td width="15%" class="headerCovTableHead">Coverage</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Test:</td>
+            <td class="headerValue">coverage-filtered.info</td>
+            <td></td>
+            <td class="headerItem">Lines:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">149</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr>
+            <td class="headerItem">Date:</td>
+            <td class="headerValue">2018-11-06 22:01:50</td>
+            <td></td>
+            <td class="headerItem">Functions:</td>
+            <td class="headerCovTableEntry">0</td>
+            <td class="headerCovTableEntry">24</td>
+            <td class="headerCovTableEntryLo">0.0 %</td>
+          </tr>
+          <tr><td><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+        </table>
+      </td>
+    </tr>
+
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+  </table>
+
+  <table cellpadding=0 cellspacing=0 border=0>
+    <tr>
+      <td><br></td>
+    </tr>
+    <tr>
+      <td>
+<pre class="sourceHeading">          Line data    Source code</pre>
+<pre class="source">
+<a name="1"><span class="lineNum">       1 </span>            : #include &quot;BurgerController.h&quot;</a>
+<span class="lineNum">       2 </span>            : #include &quot;SerialPortController.h&quot;
+<span class="lineNum">       3 </span>            : #include &quot;MessageFactory.hpp&quot;
+<span class="lineNum">       4 </span>            : #include &quot;DebugHelper.hpp&quot;
+<span class="lineNum">       5 </span>            : #include &lt;QTimer&gt;
+<a name="6"><span class="lineNum">       6 </span>            : #include &lt;QRandomGenerator&gt;</a>
+<span class="lineNum">       7 </span>            : 
+<span class="lineNum">       8 </span><span class="lineNoCov">          0 : BurgerController::BurgerController(QObject *parent)</span>
+<span class="lineNum">       9 </span><span class="lineNoCov">          0 :     : QObject(parent), timerPingTimeout_(new QTimer(this))</span>
+<span class="lineNum">      10 </span><span class="lineNoCov">          0 : {        </span>
+<span class="lineNum">      11 </span><span class="lineNoCov">          0 :     timerPingTimeout_-&gt;setSingleShot(true);</span>
+<span class="lineNum">      12 </span><span class="lineNoCov">          0 :     connect(timerPingTimeout_, &amp;QTimer::timeout, this, &amp;BurgerController::onPingTimeout);</span>
+<span class="lineNum">      13 </span>            :     //connect(this, &amp;QObject::destroyed, serialPortController_, &amp;QObject::deleteLater);
+<span class="lineNum">      14 </span>            :     //connect(serialPortThread_, &amp;QThread::finished, serialPortThread_, &amp;QThread::deleteLater);
+<a name="15"><span class="lineNum">      15 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      16 </span>            : 
+<span class="lineNum">      17 </span>            : BurgerController::~BurgerController()
+<span class="lineNum">      18 </span><span class="lineNoCov">          0 : {</span>
+<span class="lineNum">      19 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Fermeture du ProtocolController&quot;;</span>
+<span class="lineNum">      20 </span><span class="lineNoCov">          0 :     automate_.stop();</span>
+<span class="lineNum">      21 </span><span class="lineNoCov">          0 :     if(serialPortController_ != nullptr) {</span>
+<span class="lineNum">      22 </span><span class="lineNoCov">          0 :         serialPortController_-&gt;closePort();</span>
+<span class="lineNum">      23 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">      24 </span><span class="lineNoCov">          0 :     if(serialPortThread_ != nullptr) {</span>
+<span class="lineNum">      25 </span><span class="lineNoCov">          0 :         serialPortThread_-&gt;quit();</span>
+<span class="lineNum">      26 </span><span class="lineNoCov">          0 :     }</span>
+<a name="27"><span class="lineNum">      27 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      28 </span>            : 
+<span class="lineNum">      29 </span>            : void BurgerController::initializeStateMachine()
+<span class="lineNum">      30 </span>            : {
+<span class="lineNum">      31 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;stateInitialized_);</span>
+<span class="lineNum">      32 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;etatPortOuvert_);</span>
+<span class="lineNum">      33 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;etatPingEnvoye_);</span>
+<span class="lineNum">      34 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;etatPongRecu_);</span>
+<span class="lineNum">      35 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;etatPret_);</span>
+<span class="lineNum">      36 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;etatBoutonPresse_); </span>
+<span class="lineNum">      37 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;etatDesactive_);</span>
+<span class="lineNum">      38 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;etatSelectionne_);</span>
+<span class="lineNum">      39 </span><span class="lineNoCov">          0 :     automate_.addState(&amp;etatErreur_);</span>
+<span class="lineNum">      40 </span><span class="lineNoCov">          0 :     automate_.setInitialState(&amp;stateInitialized_);</span>
+<span class="lineNum">      41 </span>            : 
+<span class="lineNum">      42 </span><span class="lineNoCov">          0 :     stateInitialized_.addTransition(this, &amp;BurgerController::portOpened, &amp;etatPortOuvert_);</span>
+<span class="lineNum">      43 </span><span class="lineNoCov">          0 :     etatPortOuvert_.addTransition(this, &amp;BurgerController::pingSent, &amp;etatPingEnvoye_);</span>
+<span class="lineNum">      44 </span><span class="lineNoCov">          0 :     etatPingEnvoye_.addTransition(this, &amp;BurgerController::pongReceived, &amp;etatPongRecu_);</span>
+<span class="lineNum">      45 </span><span class="lineNoCov">          0 :     etatPongRecu_.addTransition(this, &amp;BurgerController::ready, &amp;etatPret_);</span>
+<span class="lineNum">      46 </span><span class="lineNoCov">          0 :     etatPret_.addTransition(this, &amp;BurgerController::selectionne, &amp;etatSelectionne_);</span>
+<span class="lineNum">      47 </span>            : 
+<span class="lineNum">      48 </span><span class="lineNoCov">          0 :     connect(&amp;stateInitialized_, &amp;QState::entered, this, &amp;BurgerController::onStateInitialized);</span>
+<span class="lineNum">      49 </span><span class="lineNoCov">          0 :     connect(&amp;etatPortOuvert_, &amp;QState::entered, this, &amp;BurgerController::onEtatPortOpened);</span>
+<span class="lineNum">      50 </span><span class="lineNoCov">          0 :     connect(&amp;etatPingEnvoye_, &amp;QState::entered, this, &amp;BurgerController::onEtatPingSent);</span>
+<span class="lineNum">      51 </span><span class="lineNoCov">          0 :     connect(&amp;etatPongRecu_, &amp;QState::entered, this, &amp;BurgerController::onEtatPongReceived);</span>
+<span class="lineNum">      52 </span><span class="lineNoCov">          0 :     connect(&amp;etatPret_, &amp;QState::entered, this, &amp;BurgerController::onEtatPret);</span>
+<span class="lineNum">      53 </span><span class="lineNoCov">          0 :     connect(&amp;etatBoutonPresse_, &amp;QState::entered, this, &amp;BurgerController::onEtatButtonPressed);</span>
+<span class="lineNum">      54 </span><span class="lineNoCov">          0 :     connect(&amp;etatDesactive_, &amp;QState::entered, this, &amp;BurgerController::onEtatDesactive);</span>
+<span class="lineNum">      55 </span><span class="lineNoCov">          0 :     connect(&amp;etatSelectionne_, &amp;QState::entered, this, &amp;BurgerController::onEtatSelectionne);</span>
+<span class="lineNum">      56 </span><span class="lineNoCov">          0 :     connect(&amp;etatBoutonPresse_, &amp;QState::entered, this, &amp;BurgerController::onEtatButtonPressed);</span>
+<span class="lineNum">      57 </span><span class="lineNoCov">          0 :     connect(&amp;etatErreur_, &amp;QState::entered, this, &amp;BurgerController::onEtatErreur);</span>
+<a name="58"><span class="lineNum">      58 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      59 </span>            : 
+<span class="lineNum">      60 </span>            : void BurgerController::findBurger()
+<span class="lineNum">      61 </span>            : {
+<span class="lineNum">      62 </span><span class="lineNoCov">          0 :     if(serialPortController_ == nullptr) {</span>
+<span class="lineNum">      63 </span><span class="lineNoCov">          0 :         serialPortController_ = new SerialPortController;</span>
+<span class="lineNum">      64 </span><span class="lineNoCov">          0 :         serialPortThread_ = new QThread(this);</span>
+<span class="lineNum">      65 </span><span class="lineNoCov">          0 :         connect(serialPortController_, &amp;SerialPortController::portOpened, this, &amp;BurgerController::onPortOpened);</span>
+<span class="lineNum">      66 </span><span class="lineNoCov">          0 :         connect(serialPortController_, &amp;SerialPortController::portNotOpened, this, &amp;BurgerController::onPortNotOpened);</span>
+<span class="lineNum">      67 </span><span class="lineNoCov">          0 :         connect(serialPortController_, &amp;SerialPortController::dataWritten, this, &amp;BurgerController::onDataWritten);</span>
+<span class="lineNum">      68 </span><span class="lineNoCov">          0 :         connect(serialPortController_, &amp;SerialPortController::dataReceived, this, &amp;BurgerController::onDataReceived);</span>
+<span class="lineNum">      69 </span>            : 
+<span class="lineNum">      70 </span><span class="lineNoCov">          0 :         serialPortController_-&gt;moveToThread(serialPortThread_);</span>
+<span class="lineNum">      71 </span><span class="lineNoCov">          0 :         serialPortThread_-&gt;start();</span>
+<span class="lineNum">      72 </span><span class="lineNoCov">          0 :     }</span>
+<span class="lineNum">      73 </span>            : 
+<span class="lineNum">      74 </span><span class="lineNoCov">          0 :     debugMessage(&quot;Recherche de burgers connectés pour jouer&quot;);</span>
+<span class="lineNum">      75 </span>            : 
+<span class="lineNum">      76 </span><span class="lineNoCov">          0 :     availablePorts_ = SerialPortController::availablePorts();</span>
+<span class="lineNum">      77 </span><span class="lineNoCov">          0 :     QTimer::singleShot(0, this, SLOT(tryNextPort()));</span>
+<a name="78"><span class="lineNum">      78 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      79 </span>            : 
+<span class="lineNum">      80 </span>            : void BurgerController::tryNextPort() {
+<span class="lineNum">      81 </span><span class="lineNoCov">          0 :     if(availablePorts_.isEmpty()) {</span>
+<span class="lineNum">      82 </span><span class="lineNoCov">          0 :         QTimer::singleShot(2000, this, SLOT(findBurger())); //Si la liste des ports est vide on recommence à 0 dans 2 secondes</span>
+<span class="lineNum">      83 </span><span class="lineNoCov">          0 :         return;</span>
+<span class="lineNum">      84 </span>            :     }
+<span class="lineNum">      85 </span>            : 
+<span class="lineNum">      86 </span><span class="lineNoCov">          0 :     QString portName = availablePorts_.takeLast();</span>
+<span class="lineNum">      87 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Tentative de connexion au port &quot; &lt;&lt; portName;    </span>
+<span class="lineNum">      88 </span>            : 
+<span class="lineNum">      89 </span><span class="lineNoCov">          0 :     automate_.start();</span>
+<span class="lineNum">      90 </span><span class="lineNoCov">          0 :     serialPortController_-&gt;openPort(portName);</span>
+<a name="91"><span class="lineNum">      91 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">      92 </span>            : 
+<span class="lineNum">      93 </span>            : void BurgerController::onPortOpened()
+<span class="lineNum">      94 </span>            : {
+<span class="lineNum">      95 </span><span class="lineNoCov">          0 :     SerialPortController *ctrl = qobject_cast&lt;SerialPortController*&gt;(QObject::sender());</span>
+<span class="lineNum">      96 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Un appareil est connecté au port &quot; &lt;&lt; ctrl-&gt;portName() &lt;&lt; &quot;. Démarrage de la négociation.&quot;;</span>
+<span class="lineNum">      97 </span><span class="lineNoCov">          0 :     burger_.setPortName(ctrl-&gt;portName());</span>
+<span class="lineNum">      98 </span>            : 
+<span class="lineNum">      99 </span>            :     //Activation de la transition
+<span class="lineNum">     100 </span><span class="lineNoCov">          0 :     emit portOpened();</span>
+<a name="101"><span class="lineNum">     101 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     102 </span>            : 
+<span class="lineNum">     103 </span>            : void BurgerController::onPortNotOpened()
+<span class="lineNum">     104 </span>            : {
+<span class="lineNum">     105 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Aucun appareil connecté sur ce port&quot;;</span>
+<span class="lineNum">     106 </span><span class="lineNoCov">          0 :     QTimer::singleShot(500, this, SLOT(tryNextPort())); //Si le port n'est pas dispo on essaye le suivant dans 500 ms</span>
+<a name="107"><span class="lineNum">     107 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     108 </span>            : 
+<span class="lineNum">     109 </span>            : void BurgerController::onDataWritten(quint64 len)
+<span class="lineNum">     110 </span>            : {
+<span class="lineNum">     111 </span><span class="lineNoCov">          0 :     debugMessage(QString(&quot;%1 octets écrits sur le port&quot;).arg(len));</span>
+<a name="112"><span class="lineNum">     112 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     113 </span>            : 
+<span class="lineNum">     114 </span>            : void BurgerController::onDataReceived(QByteArray data)
+<span class="lineNum">     115 </span>            : {    
+<span class="lineNum">     116 </span>            :     //Ici nous devons considérer que les données arrivent par morceaux
+<span class="lineNum">     117 </span>            :     //Le protocole indique qu'un message utile commence toujours par l'en-tête 0x01 (SOH)
+<span class="lineNum">     118 </span>            :     //se termine toujours par 0x04 (EOT)
+<span class="lineNum">     119 </span>            :     //Cependant le message utile peut-être précédé de messages de debug qui peuvent
+<span class="lineNum">     120 </span>            :     //être ignorés (selon la spécification du protocole) mais nous allons les
+<span class="lineNum">     121 </span>            :     //afficher directement en log
+<span class="lineNum">     122 </span><span class="lineNoCov">          0 :     recvBuffer_.append(data);</span>
+<span class="lineNum">     123 </span>            : 
+<span class="lineNum">     124 </span>            :     //TODO: extraire cette fonction dans la factory pour la couvrir
+<span class="lineNum">     125 </span><span class="lineNoCov">          0 :     if(recvBuffer_.contains(MessageFactory::messageTermination()) &amp;&amp; recvBuffer_.contains(MessageFactory::messageHeader())) {</span>
+<span class="lineNum">     126 </span><span class="lineNoCov">          0 :         debugMessage(QString(&quot;Nous avons reçu un message : %1&quot;).arg(QString::fromLatin1(recvBuffer_)));</span>
+<span class="lineNum">     127 </span><span class="lineNoCov">          0 :         int hdrStart = recvBuffer_.indexOf(MessageFactory::messageHeader());</span>
+<span class="lineNum">     128 </span><span class="lineNoCov">          0 :         int msgEnd = recvBuffer_.indexOf(MessageFactory::messageTermination());</span>
+<span class="lineNum">     129 </span><span class="lineNoCov">          0 :         qDebug() &lt;&lt; &quot;hdrStart=&quot; &lt;&lt; hdrStart &lt;&lt; &quot;, msgEnd=&quot; &lt;&lt; msgEnd;</span>
+<span class="lineNum">     130 </span><span class="lineNoCov">          0 :         QString debugMsg = QString::fromUtf8(recvBuffer_.left(hdrStart)).trimmed();</span>
+<span class="lineNum">     131 </span><span class="lineNoCov">          0 :         QByteArray command = recvBuffer_.mid(hdrStart, msgEnd-hdrStart+1);</span>
+<span class="lineNum">     132 </span>            : 
+<span class="lineNum">     133 </span><span class="lineNoCov">          0 :         debugMessage(QString(&quot;Infos de debug : %1&quot;).arg(debugMsg));</span>
+<span class="lineNum">     134 </span><span class="lineNoCov">          0 :         debugMessage(&quot;Commande : &quot;);</span>
+<span class="lineNum">     135 </span><span class="lineNoCov">          0 :         qDebug() &lt;&lt; command;</span>
+<span class="lineNum">     136 </span>            : 
+<span class="lineNum">     137 </span>            :         //Enfin, on laisse le surplus de données dans le buffer, il appartient peut-être à un prochain message
+<span class="lineNum">     138 </span><span class="lineNoCov">          0 :         recvBuffer_.remove(0, msgEnd+1);</span>
+<span class="lineNum">     139 </span>            : 
+<span class="lineNum">     140 </span><span class="lineNoCov">          0 :         if(!MessageFactory::isMessageValid(command)) {</span>
+<span class="lineNum">     141 </span><span class="lineNoCov">          0 :             debugMessage(&quot;Le message est invalide... Abandon&quot;);</span>
+<span class="lineNum">     142 </span>            :             //TODO: Traiter l'erreur en fonction de l'état actuel du jeu
+<span class="lineNum">     143 </span><span class="lineNoCov">          0 :             return;</span>
+<span class="lineNum">     144 </span>            :         }
+<span class="lineNum">     145 </span>            : 
+<span class="lineNum">     146 </span>            :         //Ici on traite le message en fonction de son type
+<span class="lineNum">     147 </span><span class="lineNoCov">          0 :         if(MessageFactory::messageTypeFromData(command) == MessageFactory::PONG) {</span>
+<span class="lineNum">     148 </span><span class="lineNoCov">          0 :             debugMessage(&quot;Activation du burger&quot;);</span>
+<span class="lineNum">     149 </span><span class="lineNoCov">          0 :             burger_.setBurgerState(Burger::STATE_ENABLED);</span>
+<span class="lineNum">     150 </span>            : 
+<span class="lineNum">     151 </span>            :             //Déclenche la transition
+<span class="lineNum">     152 </span><span class="lineNoCov">          0 :             emit pongReceived();</span>
+<span class="lineNum">     153 </span><span class="lineNoCov">          0 :             return;</span>
+<span class="lineNum">     154 </span><span class="lineNoCov">          0 :         } else if(MessageFactory::messageTypeFromData(command) == MessageFactory::BUTTON) {</span>
+<span class="lineNum">     155 </span><span class="lineNoCov">          0 :             debugMessage(&quot;Bouton pressé&quot;);</span>
+<span class="lineNum">     156 </span><span class="lineNoCov">          0 :             emit buttonPressed();</span>
+<span class="lineNum">     157 </span><span class="lineNoCov">          0 :         }</span>
+<span class="lineNum">     158 </span>            : 
+<span class="lineNum">     159 </span><span class="lineNoCov">          0 :     }</span>
+<a name="160"><span class="lineNum">     160 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     161 </span>            : 
+<span class="lineNum">     162 </span>            : void BurgerController::onStateInitialized()
+<span class="lineNum">     163 </span>            : {    
+<span class="lineNum">     164 </span><span class="lineNoCov">          0 :     debugMessage(&quot;Etat courant: initialisé&quot;);</span>
+<a name="165"><span class="lineNum">     165 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     166 </span>            : 
+<span class="lineNum">     167 </span>            : void BurgerController::onEtatPortOpened()
+<span class="lineNum">     168 </span>            : {
+<span class="lineNum">     169 </span><span class="lineNoCov">          0 :     debugMessage(QString(&quot;Le port %1 a été correctement ouvert. Tentative d'activation d'un burger&quot;).arg(burger_.portName()));</span>
+<span class="lineNum">     170 </span>            : 
+<span class="lineNum">     171 </span><span class="lineNoCov">          0 :     debugMessage(&quot;Exctinction de la LED&quot;);</span>
+<span class="lineNum">     172 </span><span class="lineNoCov">          0 :     serialPortController_-&gt;writeDataOnPort(MessageFactory::makeLedMessage(Burger::LED_OFF));</span>
+<span class="lineNum">     173 </span>            : 
+<span class="lineNum">     174 </span><span class="lineNoCov">          0 :     debugMessage(&quot;Envoi du ping&quot;);</span>
+<span class="lineNum">     175 </span><span class="lineNoCov">          0 :     if(!burger_.portName().isEmpty()) {        </span>
+<span class="lineNum">     176 </span>            : 
+<span class="lineNum">     177 </span><span class="lineNoCov">          0 :         QByteArray pingMessage = MessageFactory::makePingMessage();</span>
+<span class="lineNum">     178 </span><span class="lineNoCov">          0 :         serialPortController_-&gt;writeDataOnPort(pingMessage);</span>
+<span class="lineNum">     179 </span><span class="lineNoCov">          0 :         burger_.setBurgerState(Burger::STATE_PINGED);</span>
+<span class="lineNum">     180 </span>            : 
+<span class="lineNum">     181 </span>            :         //Démarrage d'un timer : on laisse 2000 ms au dispositif pour répondre Pong, au-délà
+<span class="lineNum">     182 </span>            :         //on considère que ca n'est pas un burger
+<span class="lineNum">     183 </span><span class="lineNoCov">          0 :         timerPingTimeout_-&gt;start(2000);</span>
+<span class="lineNum">     184 </span>            : 
+<span class="lineNum">     185 </span><span class="lineNoCov">          0 :         emit pingSent();</span>
+<span class="lineNum">     186 </span><span class="lineNoCov">          0 :     }</span>
+<a name="187"><span class="lineNum">     187 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     188 </span>            : 
+<span class="lineNum">     189 </span>            : void BurgerController::onEtatPingSent()
+<span class="lineNum">     190 </span>            : {
+<span class="lineNum">     191 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Etat courant: PING envoyé&quot;;</span>
+<span class="lineNum">     192 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;En attente du PONG&quot;;</span>
+<a name="193"><span class="lineNum">     193 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     194 </span>            : 
+<span class="lineNum">     195 </span>            : void BurgerController::onPingTimeout()
+<span class="lineNum">     196 </span>            : {
+<span class="lineNum">     197 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Le dispositif n'a pas répondu dans le délai imparti. Abandon.&quot;;</span>
+<span class="lineNum">     198 </span><span class="lineNoCov">          0 :     serialPortController_-&gt;closePort();</span>
+<span class="lineNum">     199 </span><span class="lineNoCov">          0 :     automate_.stop();</span>
+<span class="lineNum">     200 </span><span class="lineNoCov">          0 :     QTimer::singleShot(10, this, SLOT(tryNextPort()));</span>
+<a name="201"><span class="lineNum">     201 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     202 </span>            : 
+<span class="lineNum">     203 </span>            : void BurgerController::onEtatPongReceived()
+<span class="lineNum">     204 </span>            : {
+<span class="lineNum">     205 </span><span class="lineNoCov">          0 :     timerPingTimeout_-&gt;stop();</span>
+<span class="lineNum">     206 </span>            : 
+<span class="lineNum">     207 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Etat courant: PONG reçu&quot;;</span>
+<span class="lineNum">     208 </span><span class="lineNoCov">          0 :     burger_.setBurgerState(Burger::STATE_ENABLED);</span>
+<span class="lineNum">     209 </span><span class="lineNoCov">          0 :     emit ready();    </span>
+<a name="210"><span class="lineNum">     210 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     211 </span>            : 
+<span class="lineNum">     212 </span>            : void BurgerController::onEtatPret()
+<span class="lineNum">     213 </span>            : {
+<span class="lineNum">     214 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Etat courant: prêt&quot;;</span>
+<a name="215"><span class="lineNum">     215 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     216 </span>            : 
+<span class="lineNum">     217 </span>            : void BurgerController::onEtatButtonPressed()
+<span class="lineNum">     218 </span>            : {
+<span class="lineNum">     219 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Etat courant: boutton pressé&quot;;</span>
+<a name="220"><span class="lineNum">     220 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     221 </span>            : 
+<span class="lineNum">     222 </span>            : void BurgerController::onEtatDesactive()
+<span class="lineNum">     223 </span>            : {
+<span class="lineNum">     224 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Etat courant: désactivé&quot;;</span>
+<span class="lineNum">     225 </span><span class="lineNoCov">          0 :     burger_.setBurgerState(Burger::STATE_DISABLED);</span>
+<a name="226"><span class="lineNum">     226 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     227 </span>            : 
+<span class="lineNum">     228 </span>            : void BurgerController::onEtatSelectionne()
+<span class="lineNum">     229 </span>            : {
+<span class="lineNum">     230 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Etat courant: sélectionné&quot;;</span>
+<span class="lineNum">     231 </span><span class="lineNoCov">          0 :     burger_.setBurgerState(Burger::STATE_SELECTED);</span>
+<span class="lineNum">     232 </span><span class="lineNoCov">          0 :     QTimer::singleShot(1, this, SLOT(startBlinking()));</span>
+<a name="233"><span class="lineNum">     233 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     234 </span>            : 
+<span class="lineNum">     235 </span>            : void BurgerController::onEtatErreur()
+<span class="lineNum">     236 </span>            : {
+<span class="lineNum">     237 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Etat courant: erreur&quot;;</span>
+<a name="238"><span class="lineNum">     238 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     239 </span>            : 
+<span class="lineNum">     240 </span>            : void BurgerController::startBlinking()
+<span class="lineNum">     241 </span>            : {
+<span class="lineNum">     242 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Clignotement de la LED&quot;;</span>
+<span class="lineNum">     243 </span><span class="lineNoCov">          0 :     serialPortController_-&gt;writeDataOnPort(MessageFactory::makeLedMessage(Burger::LED_BLINK));</span>
+<span class="lineNum">     244 </span>            :     //On arrête le clignotement ou bout de 2 secondes
+<span class="lineNum">     245 </span><span class="lineNoCov">          0 :     QTimer::singleShot(2000, this, SLOT(stopBlinking()));</span>
+<a name="246"><span class="lineNum">     246 </span><span class="lineNoCov">          0 : }</span></a>
+<span class="lineNum">     247 </span>            : 
+<span class="lineNum">     248 </span>            : void BurgerController::stopBlinking()
+<span class="lineNum">     249 </span>            : {
+<span class="lineNum">     250 </span><span class="lineNoCov">          0 :     qDebug() &lt;&lt; &quot;Burger &quot; &lt;&lt; DebugHelper::teamToString(burger_.team()) &lt;&lt; &quot;. Arrêt du clignotement de la LED&quot;;</span>
+<span class="lineNum">     251 </span><span class="lineNoCov">          0 :     serialPortController_-&gt;writeDataOnPort(MessageFactory::makeLedMessage(Burger::LED_ON));</span>
+<span class="lineNum">     252 </span><span class="lineNoCov">          0 : }</span>
+</pre>
+      </td>
+    </tr>
+  </table>
+  <br>
+
+  <table width="100%" border=0 cellspacing=0 cellpadding=0>
+    <tr><td class="ruler"><img src="../glass.png" width=3 height=3 alt=""></td></tr>
+    <tr><td class="versionInfo">Generated by: <a href="http://ltp.sourceforge.net/coverage/lcov.php" target="_parent">LCOV version 1.13</a></td></tr>
+  </table>
+  <br>
+
+</body>
+</html>

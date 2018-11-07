@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>ViewGame.qml</file>
+    </qresource>
+    <qresource prefix="/videos">
+        <file alias="generique.mp4">media/Générique Burger Quiz.mp4</file>
+    </qresource>
+    <qresource prefix="/images">
+        <file alias="ketchupmayo.png">media/ketchupmayo.png</file>
+    </qresource>
+    <qresource prefix="/fonts">
+        <file alias="horseshoeslemonade.ttf">media/horseshoeslemonade.ttf</file>
+    </qresource>
+    <qresource prefix="/sounds">
+        <file alias="buzz.wav">media/buzz.wav</file>
+    </qresource>
+</RCC>
