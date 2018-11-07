@@ -122,10 +122,6 @@ This project is dedicated to training only. None of the graphics are owned by ti
 				]
 			}
 		} 
-		/*stage("Packaging") {
-
-		}
-		*/       
 	}
 	/*post {
 	    //Nothing at the moment
