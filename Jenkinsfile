@@ -90,7 +90,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 
 				echo "Analyse coverage"				
 				sh 'chmod +x coverage/coverage.sh'
-				sh 'rmdir -f coverage/data'
+				sh 'rm -rf coverage/data'
 				sh 'coverage/coverage.sh tests'
 
 				echo "Publish coverage"
