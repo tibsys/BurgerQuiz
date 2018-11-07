@@ -40,6 +40,15 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					}
 					setDescription()
 				}
+
+				//Build in Release
+				echo "Starting build for Linux 64 bit with Qt 5.10 and GCC"
+				
+				echo Calling qmake
+				qmake CONFIG+=release 
+
+				echo Compiling
+				qmake
 			}
 		}
 		/*stage("Tests & coverage") {
