@@ -45,11 +45,11 @@ This project is dedicated to training only. None of the graphics are owned by ti
 				//Build in Release
 				echo "Starting build for Linux 64 bit with Qt 5.10 and GCC"
 				
-				echo Calling qmake
+				echo "Calling qmake"
 				sh 'qmake CONFIG+=release'
 
-				echo Compiling
-				sh 'qmake'
+				echo "Compiling"
+				sh 'make'
 			}
 		}
 		/*stage("Tests & coverage") {
