@@ -5,6 +5,7 @@
 //		- no dependency
 //
 pipeline { 	
+	agent { label 'master' }
 	//Only keep the last 10 logs and the last artefact
 	//Only keep the last logs and artefacts
 	options {
@@ -28,7 +29,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 	}
 
     stages {						
-        stage('Build & analysis') {
+        stage('Build & analysis') {			
 			steps {
 				//Update the job description
 				script { 
@@ -44,9 +45,14 @@ This project is dedicated to training only. None of the graphics are owned by ti
 		stage("Tests & coverage") {
 			//Binaries are created at the end of this stage
 			//Binaries are: executable binary + GNU/Linux bundle (zipped)	
+			steps {
+
+			}
 		}
 		stage("Documentation") {
-
+			steps {
+				
+			}
 		}        
 	}
 	post {
