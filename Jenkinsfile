@@ -88,9 +88,10 @@ This project is dedicated to training only. None of the graphics are owned by ti
 				}
 			}
 		}
-		/*stage("Documentation") {
+		stage("Documentation") {
 			steps {
 				echo "Generate documentation"
+				sh 'doxygen documentation/doxy'
 
 				echo "Publish documentation"
 				publishHTML target: [
@@ -103,7 +104,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 				]
 			}
 		} 
-		stage("Packaging") {
+		/*stage("Packaging") {
 
 		}
 		*/       
