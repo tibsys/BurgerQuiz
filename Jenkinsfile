@@ -48,22 +48,55 @@ This project is dedicated to training only. None of the graphics are owned by ti
 				echo "Calling qmake"
 				sh 'qmake CONFIG+=release'
 
+				echo "Cleaning"
+				sh 'make clean'
+
 				echo "Compiling"
 				sh 'make'
+
+				//stash includes: 'BurgerQuiz', name: 'bin'
+				archiveArtifacts artifacts: 'BurgerQuiz'
 			}
 		}
-		/*stage("Tests & coverage") {
-			//Binaries are created at the end of this stage
-			//Binaries are: executable binary + GNU/Linux bundle (zipped)	
+		stage("Tests & coverage") {			
+			steps {
+				//Build in Debug with coverage
+				echo "Starting build for Linux 64 bit with Qt 5.10 and GCC"				
+
+				dir('tests') {
+					echo "Calling qmake"
+					sh 'qmake CONFIG+=debug CONFIG+=coverage'
+					
+					echo "Cleaning"
+					sh 'make clean'
+
+					echo "Compiling"
+					sh 'make'
+
+					echo "Execute unit tests"
+					sh 'make check TESTARGS="-o testresults.xml,xunitxml"'
+					
+					echo "Analyse test results"
+					step([$class: 'XUnitBuilder',
+						thresholds: [
+							[$class: 'FailedThreshold', failureThreshold: '0']
+						],
+						tools: [
+							[$class: 'QTestLibType', pattern: 'testresults.xml']
+						]
+					])
+				}
+			}
+		}
+		/*stage("Documentation") {
 			steps {
 
 			}
-		}
-		stage("Documentation") {
-			steps {
+		} 
+		stage("Packaging") {
 
-			}
-		} */       
+		}
+		*/       
 	}
 	/*post {
 	    //Nothing at the moment
