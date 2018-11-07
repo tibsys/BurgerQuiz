@@ -5,6 +5,7 @@
 //		- no dependency
 //
 pipeline { 	
+	agent { label 'master' }
 	//Only keep the last 10 logs and the last artefact
 	//Only keep the last logs and artefacts
 	options {
