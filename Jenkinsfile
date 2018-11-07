@@ -74,7 +74,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					sh 'make'
 
 					echo "Execute unit tests"
-					sh 'make check TESTARGS="-o testresults.xml,xunitxml"'
+					sh 'make check TESTARGS="-o testresults.xml,xml"'
 					
 					echo "Analyse test results"
 					step([$class: 'XUnitBuilder',
@@ -84,13 +84,23 @@ This project is dedicated to training only. None of the graphics are owned by ti
 						tools: [
 							[$class: 'QTestLibType', pattern: '**/testresults.xml']
 						]
-					])
+					])					
 				}
 			}
 		}
 		/*stage("Documentation") {
 			steps {
+				echo "Generate documentation"
 
+				echo "Publish documentation"
+				publishHTML target: [
+					allowMissing: false,
+					alwaysLinkToLastBuild: true,
+					keepAll: false,
+					reportDir: 'html',
+					reportFiles: 'index.html',
+					reportName: 'CppCheck Report'
+				]
 			}
 		} 
 		stage("Packaging") {
