@@ -33,6 +33,3 @@ genhtml -o "${HTML_RESULTS}" "${COV_DIR}/coverage-filtered.info"
  
 # Reset our counts
 lcov -d "${COV_DIR}" -z
- 
-# Open the index.html
-open "${HTML_RESULTS}/index.html"
