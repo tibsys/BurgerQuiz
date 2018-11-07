@@ -98,9 +98,9 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					allowMissing: false,
 					alwaysLinkToLastBuild: true,
 					keepAll: false,
-					reportDir: 'html',
-					reportFiles: 'index.html',
-					reportName: 'CppCheck Report'
+					reportDir: 'documentation/html',
+					reportFiles: '*',
+					reportName: 'Doxygen documentation'
 				]
 			}
 		} 
