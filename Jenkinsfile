@@ -85,8 +85,24 @@ This project is dedicated to training only. None of the graphics are owned by ti
 						tools: [
 							[$class: 'QTestLibType', pattern: '**/testresults.xml']
 						]
-					])					
+					])	
 				}
+
+				echo "Analyse coverage"				
+				sh 'chmod +x coverage/coverage.sh'
+				sh 'rmdir -f coverage/data'
+				sh 'coverage/coverage.sh tests'
+
+				echo "Publish coverage"
+				publishHTML target: [
+					allowMissing: false,
+					alwaysLinkToLastBuild: true,
+					keepAll: false,
+					reportDir: 'doverage/data/html',
+					reportFiles: 'index.html',
+					reportName: 'Coverage report',
+					includes: "**/*"
+				]				
 			}
 		}
 		stage("Documentation") {
@@ -101,7 +117,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					keepAll: false,
 					reportDir: 'documentation/html',
 					reportFiles: 'index.html',
-					reportName: 'Doxygen documentation'
+					reportName: 'Doxygen documentation',
 					includes: "**/*"
 				]
 			}
