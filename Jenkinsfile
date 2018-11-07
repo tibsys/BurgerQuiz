@@ -82,7 +82,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 							[$class: 'FailedThreshold', failureThreshold: '0']
 						],
 						tools: [
-							[$class: 'QTestLibType', pattern: 'testresults.xml']
+							[$class: 'QTestLibType', pattern: '**/testresults.xml']
 						]
 					])
 				}
