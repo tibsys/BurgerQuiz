@@ -98,7 +98,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					allowMissing: false,
 					alwaysLinkToLastBuild: true,
 					keepAll: false,
-					reportDir: 'doverage/data/html',
+					reportDir: 'coverage/data/html',
 					reportFiles: 'index.html',
 					reportName: 'Coverage report',
 					includes: "**/*"
