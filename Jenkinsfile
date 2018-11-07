@@ -27,18 +27,19 @@ This project is dedicated to training only. None of the graphics are owned by ti
 """	
 	}
 
-    stages {				
-        stage('Build & analysis') {
-			//Update the job description
-			script { 
-    			def setDescription = { 
-        			def item = Jenkins.instance.getItemByFullName(env.JOB_NAME) 
-        			item.setDescription(jobDescription) 
-        			item.save()
-    			}
-    			setDescription()
+    stages {	
+		step {			
+        	stage('Build & analysis') {
+				//Update the job description
+				script { 
+					def setDescription = { 
+						def item = Jenkins.instance.getItemByFullName(env.JOB_NAME) 
+						item.setDescription(jobDescription) 
+						item.save()
+					}
+					setDescription()
+				}
 			}
-            
 		}
 		stage("Tests & coverage") {
 			//Binaries are created at the end of this stage
