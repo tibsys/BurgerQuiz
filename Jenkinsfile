@@ -41,15 +41,15 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					setDescription()
 				}
 
-
 				//Build in Release
 				echo "Starting build for Linux 64 bit with Qt 5.10 and GCC"
 				
 				echo "Calling qmake"
 				sh 'qmake CONFIG+=release'
 
-				echo "Cleaning"
-				sh 'make clean'
+				//For non-incremental build uncomment following lines
+				/*echo "Cleaning"
+				sh 'make clean'*/
 
 				echo "Compiling"
 				sh 'make'
@@ -67,8 +67,9 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					echo "Calling qmake"
 					sh 'qmake CONFIG+=debug CONFIG+=coverage'
 					
-					echo "Cleaning"
-					sh 'make clean'
+					//For non-incremental build uncomment following lines
+					/*echo "Cleaning"
+					sh 'make clean'*/
 
 					echo "Compiling"
 					sh 'make'
@@ -99,7 +100,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					alwaysLinkToLastBuild: true,
 					keepAll: false,
 					reportDir: 'documentation/html',
-					reportFiles: '*',
+					reportFiles: 'index.html',
 					reportName: 'Doxygen documentation'
 				]
 			}
