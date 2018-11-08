@@ -130,10 +130,11 @@ Item {
 
         if (event.key === Qt.Key_N) {
             if(gameController.gameState !== GameController.INITIALIZING) {
-                console.warn("Nouvelle partie");
-                state = "StateSelection";
-                gameController.gameState = GameController.SELECTION;
-                event.accepted = true;
+                console.warn("Nouvelle partie")
+                state = "StateSelection"
+                //gameController.gameState = GameController.SELECTION
+                gameController.setReady()
+                event.accepted = true
             }
         } else if(event.key === Qt.Key_Q) {
             console.warn("Fermeture de l'application")

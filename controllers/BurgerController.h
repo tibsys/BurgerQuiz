@@ -178,6 +178,11 @@ public slots:
      */
     void startBlinking();
 
+    /**
+     * @brief Désactive la LED du burger connecté
+     */
+    void ledOff();
+
 protected slots:
     /**
      * @brief fonction appelée lorsque le port de communication est ouvert.

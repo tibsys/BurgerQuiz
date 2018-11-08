@@ -247,5 +247,11 @@ void BurgerController::startBlinking()
 void BurgerController::stopBlinking()
 {
     qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Arrêt du clignotement de la LED";
-    serialPortController_->writeDataOnPort(MessageFactory::makeLedMessage(Burger::LED_ON));
+    serialPortController_->writeDataOnPort(MessageFactory::makeLedMessage(Burger::LED_OFF));
+}
+
+void BurgerController::ledOff()
+{
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Extinction de la LED";
+    serialPortController_->writeDataOnPort(MessageFactory::makeLedMessage(Burger::LED_OFF));
 }

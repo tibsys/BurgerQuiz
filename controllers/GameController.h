@@ -110,6 +110,11 @@ public slots:
          */
     void initialize();
 
+    /**
+     * @brief Cette fonction remet l'automate à l'état PRET, désactive les LED et attend un appui sur le bouton.
+     */
+    void setReady();
+
 private:    
     BurgerController *burger1_;
     BurgerController *burger2_;
