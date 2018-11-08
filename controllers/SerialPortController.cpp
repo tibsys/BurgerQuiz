@@ -25,7 +25,7 @@ QStringList SerialPortController::availablePorts()
         //Filtrage des ports non STM32
         QRegExp regexp("STM32 STLink|USB Serial Device");
 
-        //qInfo() << port.description() << "," << port.vendorIdentifier();
+        qInfo() << "port description=" <<port.description() << ", vendorIdentifier=" << port.vendorIdentifier() << "," << ", manufacturer=" << port.manufacturer() << ", productIdentifier=" << port.productIdentifier();
         if(regexp.indexIn(port.description()) == -1) {
             //qInfo() << "Port " << port.portName() << " filtré";
             continue;
