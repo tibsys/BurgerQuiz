@@ -1,4 +1,4 @@
-QT += quick serialport multimedia multimediawidgets widgets
+QT += quick serialport multimedia multimediawidgets widgets gui
 CONFIG += c++11
 
 coverage {

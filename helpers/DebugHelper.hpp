@@ -17,6 +17,20 @@ public:
         return data.toHex().toUpper();
     }
 
+    static QByteArray hexStringToByteArray(QString str)
+        {
+            QByteArray ba;
+
+            bool ok = false;
+            for(int i = 0 ; i < str.length() ; i+=2)
+            {
+                QString sub = str.mid(i, 2);
+                ba.append(sub.toUInt(&ok, 16));
+            }
+
+            return ba;
+        }
+
     /**
      * @brief Traduit une équipe (\see Burger::Team) en chaine de caractères
      */
