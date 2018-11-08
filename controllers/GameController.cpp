@@ -94,6 +94,7 @@ void GameController::onButtonPressed()
 
     gameState_ = TEAM_SELECTED;
     emit burgerSelected(selectionne.team());
+    ctrl->startBlinking();
 
     ctrl->selectionne();
 }
@@ -101,4 +102,17 @@ void GameController::onButtonPressed()
 void GameController::onGameStateChanged()
 {
     qInfo() << "L'état du jeu a changé";
+}
+
+void GameController::setReady()
+{
+    qInfo() << "Remet le jeu à l'état Prêt.";
+
+    qInfo() << "Extinction de la LED de l'équipe MAYO";
+    burger1_->ledOff();
+
+    qInfo() << "Extinction de la LED de l'équipe KETCHUP";
+    burger2_->ledOff();
+
+    gameState_ = SELECTION;
 }
