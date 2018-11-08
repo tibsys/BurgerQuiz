@@ -10,8 +10,6 @@ BurgerController::BurgerController(QObject *parent)
 {        
     timerPingTimeout_->setSingleShot(true);
     connect(timerPingTimeout_, &QTimer::timeout, this, &BurgerController::onPingTimeout);
-    //connect(this, &QObject::destroyed, serialPortController_, &QObject::deleteLater);
-    //connect(serialPortThread_, &QThread::finished, serialPortThread_, &QThread::deleteLater);
 }
 
 BurgerController::~BurgerController()

@@ -23,15 +23,14 @@ QStringList SerialPortController::availablePorts()
     QStringList portsNames;
     foreach(QSerialPortInfo port, ports) {
         //Filtrage des ports non STM32
-        QRegExp regexp("STM32 STLink|USB Serial Device");
+        QRegExp regexp("STM32 STLink|USB Serial Device|STLink|STMicroelectronics");
 
-        qInfo() << "port description=" <<port.description() << ", vendorIdentifier=" << port.vendorIdentifier() << "," << ", manufacturer=" << port.manufacturer() << ", productIdentifier=" << port.productIdentifier();
+        //qInfo() << "port description=" <<port.description() << ", vendorIdentifier=" << port.vendorIdentifier() << "," << ", manufacturer=" << port.manufacturer() << ", productIdentifier=" << port.productIdentifier();
         if(regexp.indexIn(port.description()) == -1) {
             //qInfo() << "Port " << port.portName() << " filtré";
             continue;
         }
 
-        //qInfo() << "Port : " << port.portName() << ", description : " << port.description() << ", location : " << port.systemLocation();
         portsNames << port.portName();
     }
 
