@@ -133,6 +133,6 @@ void TestBurgerController::test_caseIncomingDataFragmentedMultipleCommands()
     QCOMPARE(spyButtonPressed.count(), 4);
 }
 
-QTEST_MAIN(TestBurgerController)
+QTEST_GUILESS_MAIN(TestBurgerController)
 
 #include "tst_testburgercontroller.moc"
