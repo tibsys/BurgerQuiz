@@ -84,7 +84,7 @@ public:
      * @param message Le message brut à afficher
      */
     void debugMessage(QString message) {
-        qDebug() << QString("Equipe %1 : %3.").arg(DebugHelper::teamToString(burger_.team())).arg(message);
+        qInfo() << QString("Equipe %1 : %3.").arg(DebugHelper::teamToString(burger_.team())).arg(message);
     }
 
     /**

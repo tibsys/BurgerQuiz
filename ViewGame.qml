@@ -15,17 +15,24 @@ Item {
 
         onBurgerInitialized: {
             if(team === Burger.MAYO) {
-                console.log("Affichage du burger pour l'équipe Mayo")
-                vueJeu.masqueMayo.visible = false
+                console.warn("Affichage du burger pour l'équipe Mayo")
+                //vueJeu.masqueMayo.visible = false
+                state = "StateMayoActivated"
             } else if (team === Burger.KETCHUP) {
-                console.log("Affichage du burger pour l'équipe Ketchup")
-                vueJeu.masqueKetchup.visible = false
+                console.warn("Affichage du burger pour l'équipe Ketchup")
+                //vueJeu.masqueKetchup.visible = false
+                state = "StateKetchupActivated"
             }
         }
 
         onGameReady: {
             state = "StateGameStarted"
             gameController.gameState = GameController.INITIALIZED
+
+            console.warn("")
+            console.warn("Le jeu est prêt !")
+            console.warn("> Appuyez sur la touche N pour lancer une nouvelle question.")
+            console.warn("> Appuyez sur la touche Q pour quitter le jeu.")
         }
 
         onBurgerSelected: {
@@ -39,7 +46,6 @@ Item {
         visible: false
         anchors.fill: parent
 
-
         MediaPlayer {
             id: mediaplayer
             source: "/videos/generique.mp4"
@@ -47,16 +53,11 @@ Item {
             autoPlay: true
 
             onError: {
-                console.log("Mediaplayer error: " +errorString);
-            }
-
-            Component.onCompleted: {
-                /*console.log("VueGenerique : A retirer...")
-                generiqueTermine()*/
+                console.warn("Mediaplayer error: " +errorString);
             }
 
             onStopped: {
-                console.log("Fin du générique. Démarrage du jeu.")
+                console.warn("Fin du générique. Démarrage du jeu.")
                 state = "StateInitializing"
                 gameController.initialize()
             }
@@ -97,48 +98,46 @@ Item {
 
     Item {
         id: masques
-        visible: false
+        //visible: false
         anchors.bottomMargin: 100
         anchors.fill: parent
 
-        Row {
-            id: row
-            anchors.fill: parent
+        Rectangle {
+            id: masqueKetchup
+            color: "#000000"
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.rightMargin: parent.width/2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            z: 99
+        }
 
-            Rectangle {
-                id: masqueKetchup
-                color: "#000000"
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.rightMargin: parent.width/2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                z: 99
-            }
-
-            Rectangle {
-                id: masqueMayo
-                color: "#000000"
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.leftMargin: parent.width/2
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-                z: 99
-            }
+        Rectangle {
+            id: masqueMayo
+            color: "#000000"
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.leftMargin: parent.width/2
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            z: 99
         }
     }
 
     Keys.onPressed: {
-        console.log("Etat du jeu : " +gameController.gameState)
+        console.warn("Etat du jeu : " +gameController.gameState)
 
         if (event.key === Qt.Key_N) {
             if(gameController.gameState !== GameController.INITIALIZING) {
-                console.log("Nouvelle partie");
+                console.warn("Nouvelle partie");
                 state = "StateSelection";
                 gameController.gameState = GameController.SELECTION;
                 event.accepted = true;
             }
+        } else if(event.key === Qt.Key_Q) {
+            console.warn("Fermeture de l'application")
+            Qt.quit()
         }
     }
 
@@ -184,22 +183,53 @@ Item {
             }
 
             PropertyChanges {
-                target: lblInitialisation
-                visible: true
-            }
-
-            PropertyChanges {
-                target: masques
-                visible: true
-            }
-
-            PropertyChanges {
                 target: masqueKetchup
                 visible: true
             }
 
             PropertyChanges {
                 target: masqueMayo
+                visible: true
+            }
+
+            PropertyChanges {
+                target: background
+                visible: true
+            }
+        },
+        State {
+            name: "StateMayoActivated"
+
+            PropertyChanges {
+                target: lblInitalisation
+                visible: true
+            }
+
+            PropertyChanges {
+                target: masqueMayo
+                visible: false
+            }
+
+            PropertyChanges {
+                target: background
+                visible: true
+            }
+        },
+        State {
+            name: "StateKetchupActivated"
+
+            PropertyChanges {
+                target: lblInitalisation
+                visible: true
+            }
+
+            PropertyChanges {
+                target: masqueKetchup
+                visible: false
+            }
+
+            PropertyChanges {
+                target: background
                 visible: true
             }
         },
@@ -214,17 +244,22 @@ Item {
 
             PropertyChanges {
                 target: masqueMayo
-                opacity: 0
+                visible: false
             }
 
             PropertyChanges {
                 target: masqueKetchup
-                opacity: 0
+                visible: false
             }
 
             PropertyChanges {
                 target: subGenerique
                 visible: false
+            }
+
+            PropertyChanges {
+                target: background
+                visible: true
             }
         },
         State {
@@ -237,12 +272,17 @@ Item {
 
             PropertyChanges {
                 target: masqueMayo
-                opacity: 0
+                visible: false
             }
 
             PropertyChanges {
                 target: masqueKetchup
-                opacity: 0
+                visible: false
+            }
+
+            PropertyChanges {
+                target: background
+                visible: true
             }
 
             PropertyChanges {
@@ -261,17 +301,22 @@ Item {
 
             PropertyChanges {
                 target: masqueMayo
-                opacity: 1
+                visible: true
             }
 
             PropertyChanges {
                 target: masqueKetchup
-                opacity: 0
+                visible: false
             }
 
             PropertyChanges {
                 target: subGenerique
                 visible: false
+            }
+
+            PropertyChanges {
+                target: background
+                visible: true
             }
         },
         State {
@@ -285,17 +330,22 @@ Item {
 
             PropertyChanges {
                 target: masqueMayo
-                opacity: 0
+                visible: false
             }
 
             PropertyChanges {
                 target: masqueKetchup
-                opacity: 1
+                visible: true
             }
 
             PropertyChanges {
                 target: subGenerique
                 visible: false
+            }
+
+            PropertyChanges {
+                target: background
+                visible: true
             }
         }
     ]

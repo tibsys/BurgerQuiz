@@ -8,7 +8,7 @@
 
 /**
  * @brief Cette fonction est appelée par le Message Handler de Qt (QtMessageHandler) qui centralise et redirige tous les messages
- * de log créés par les fonctions qDebug(), qWarning(), etc
+ * de log créés par les fonctions qInfo(), qWarning(), etc
  *
  * Nous utilisons ce mécanisme, conjointement à la classe FormLog pour afficher les logs dans une fenêtre, de manière simple d'un
  * point de architecture tout en s'appuyant le plus possible sur les mécanismes de Qt.
@@ -58,8 +58,10 @@ int main(int argc, char *argv[])
     //Instanciation et initialisation du moteur QML
     QQmlApplicationEngine engine;
     engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
+   /* if (engine.rootObjects().isEmpty()) {
+        qCritical() << "QmlApplicationEngine could not load the main scene";
+        return -2;
+    }*/
 
     //Démarrage de l'application
     return app.exec();

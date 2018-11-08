@@ -45,7 +45,9 @@ public:
     /**
      * @brief Ferme le port de communication actuellement ouvert.
      */
-    void closePort();
+    void closePort() {
+        QMetaObject::invokeMethod(this, "internalClosePort", Qt::QueuedConnection);
+    }
     /**
      * @brief Ecrit des données dans le buffer de communication du port série. Cette fonction est un proxy vers la fonction internalWriteDataOnPort() et permet
      * une exécution dans le thread du contrôleur et non dans celui de l'appelant.
@@ -85,6 +87,7 @@ private slots:
      * @param portName
      */
     void internalOpenPort(QString portName);
+    void internalClosePort();
     /**
      * @brief fonction appelée lorsque le port de communication a des données en tampon et qu'il est prêt à les envoyer.
      */

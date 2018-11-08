@@ -16,7 +16,7 @@ BurgerController::BurgerController(QObject *parent)
 
 BurgerController::~BurgerController()
 {
-    qDebug() << "Fermeture du ProtocolController";
+    qInfo() << "Fermeture du ProtocolController";
     automate_.stop();
     if(serialPortController_ != nullptr) {
         serialPortController_->closePort();
@@ -74,17 +74,18 @@ void BurgerController::findBurger()
     debugMessage("Recherche de burgers connectés pour jouer");
 
     availablePorts_ = SerialPortController::availablePorts();
-    QTimer::singleShot(0, this, SLOT(tryNextPort()));
+    QTimer::singleShot(100, this, SLOT(tryNextPort()));
 }
 
 void BurgerController::tryNextPort() {
     if(availablePorts_.isEmpty()) {
+        qInfo() << "Aucun port de communication trouvé, nouvel essai dans 2 secondes";
         QTimer::singleShot(2000, this, SLOT(findBurger())); //Si la liste des ports est vide on recommence à 0 dans 2 secondes
         return;
     }
 
     QString portName = availablePorts_.takeLast();
-    qDebug() << "Tentative de connexion au port " << portName;    
+    qInfo() << "Tentative de connexion au port " << portName;    
 
     automate_.start();
     serialPortController_->openPort(portName);
@@ -93,7 +94,7 @@ void BurgerController::tryNextPort() {
 void BurgerController::onPortOpened()
 {
     SerialPortController *ctrl = qobject_cast<SerialPortController*>(QObject::sender());
-    qDebug() << "Un appareil est connecté au port " << ctrl->portName() << ". Démarrage de la négociation.";
+    qInfo() << "Un appareil est connecté au port " << ctrl->portName() << ". Démarrage de la négociation.";
     burger_.setPortName(ctrl->portName());
 
     //Activation de la transition
@@ -102,7 +103,7 @@ void BurgerController::onPortOpened()
 
 void BurgerController::onPortNotOpened()
 {
-    qDebug() << "Aucun appareil connecté sur ce port";
+    qInfo() << "Aucun appareil connecté sur ce port";
     QTimer::singleShot(500, this, SLOT(tryNextPort())); //Si le port n'est pas dispo on essaye le suivant dans 500 ms
 }
 
@@ -126,13 +127,13 @@ void BurgerController::onDataReceived(QByteArray data)
         debugMessage(QString("Nous avons reçu un message : %1").arg(QString::fromLatin1(recvBuffer_)));
         int hdrStart = recvBuffer_.indexOf(MessageFactory::messageHeader());
         int msgEnd = recvBuffer_.indexOf(MessageFactory::messageTermination());
-        qDebug() << "hdrStart=" << hdrStart << ", msgEnd=" << msgEnd;
+        qInfo() << "hdrStart=" << hdrStart << ", msgEnd=" << msgEnd;
         QString debugMsg = QString::fromUtf8(recvBuffer_.left(hdrStart)).trimmed();
         QByteArray command = recvBuffer_.mid(hdrStart, msgEnd-hdrStart+1);
 
         debugMessage(QString("Infos de debug : %1").arg(debugMsg));
         debugMessage("Commande : ");
-        qDebug() << command;
+        qInfo() << command;
 
         //Enfin, on laisse le surplus de données dans le buffer, il appartient peut-être à un prochain message
         recvBuffer_.remove(0, msgEnd+1);
@@ -188,13 +189,13 @@ void BurgerController::onEtatPortOpened()
 
 void BurgerController::onEtatPingSent()
 {
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: PING envoyé";
-    qDebug() << "En attente du PONG";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: PING envoyé";
+    qInfo() << "En attente du PONG";
 }
 
 void BurgerController::onPingTimeout()
 {
-    qDebug() << "Le dispositif n'a pas répondu dans le délai imparti. Abandon.";
+    qInfo() << "Le dispositif n'a pas répondu dans le délai imparti. Abandon.";
     serialPortController_->closePort();
     automate_.stop();
     QTimer::singleShot(10, this, SLOT(tryNextPort()));
@@ -204,42 +205,42 @@ void BurgerController::onEtatPongReceived()
 {
     timerPingTimeout_->stop();
 
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: PONG reçu";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: PONG reçu";
     burger_.setBurgerState(Burger::STATE_ENABLED);
     emit ready();    
 }
 
 void BurgerController::onEtatPret()
 {
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: prêt";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: prêt";
 }
 
 void BurgerController::onEtatButtonPressed()
 {
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: boutton pressé";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: boutton pressé";
 }
 
 void BurgerController::onEtatDesactive()
 {
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: désactivé";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: désactivé";
     burger_.setBurgerState(Burger::STATE_DISABLED);
 }
 
 void BurgerController::onEtatSelectionne()
 {
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: sélectionné";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: sélectionné";
     burger_.setBurgerState(Burger::STATE_SELECTED);
     QTimer::singleShot(1, this, SLOT(startBlinking()));
 }
 
 void BurgerController::onEtatErreur()
 {
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: erreur";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Etat courant: erreur";
 }
 
 void BurgerController::startBlinking()
 {
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Clignotement de la LED";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Clignotement de la LED";
     serialPortController_->writeDataOnPort(MessageFactory::makeLedMessage(Burger::LED_BLINK));
     //On arrête le clignotement ou bout de 2 secondes
     QTimer::singleShot(2000, this, SLOT(stopBlinking()));
@@ -247,6 +248,6 @@ void BurgerController::startBlinking()
 
 void BurgerController::stopBlinking()
 {
-    qDebug() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Arrêt du clignotement de la LED";
+    qInfo() << "Burger " << DebugHelper::teamToString(burger_.team()) << ". Arrêt du clignotement de la LED";
     serialPortController_->writeDataOnPort(MessageFactory::makeLedMessage(Burger::LED_ON));
 }

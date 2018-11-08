@@ -16,21 +16,22 @@ SerialPortController::~SerialPortController()
 
 QStringList SerialPortController::availablePorts()
 {
-    qDebug() << "Recherche des ports série...";
+    qInfo() << "Recherche des ports série...";
     QList<QSerialPortInfo> ports = QSerialPortInfo::availablePorts();
-    qDebug() << ports.size() << " ports trouvés";
+    qInfo() << ports.size() << " ports trouvés";
 
     QStringList portsNames;
     foreach(QSerialPortInfo port, ports) {
         //Filtrage des ports non STM32
-        QRegExp regexp("STM32 STLink");
+        QRegExp regexp("STM32 STLink|USB Serial Device");
 
+        //qInfo() << port.description() << "," << port.vendorIdentifier();
         if(regexp.indexIn(port.description()) == -1) {
-            qDebug() << "Port " << port.portName() << " filtré";
+            //qInfo() << "Port " << port.portName() << " filtré";
             continue;
         }
 
-        qDebug() << "Port : " << port.portName() << ", description : " << port.description() << ", location : " << port.systemLocation();
+        //qInfo() << "Port : " << port.portName() << ", description : " << port.description() << ", location : " << port.systemLocation();
         portsNames << port.portName();
     }
 
@@ -39,7 +40,7 @@ QStringList SerialPortController::availablePorts()
 
 void SerialPortController::internalOpenPort(QString portName)
 {
-    qDebug() << "Tentative d'ouverture du port " << portName;
+    qInfo() << "Tentative d'ouverture du port " << portName;
 
     currentPort_ = new QSerialPort(portName, this); //Cette instance doit absolument être créée dans le bon thread
     if(currentPort_ == nullptr) {
@@ -50,7 +51,7 @@ void SerialPortController::internalOpenPort(QString portName)
     bool ok = currentPort_->open(QIODevice::ReadWrite);
 
     if(ok) {
-        qDebug() << "Port ouvert.";
+        qInfo() << "Port ouvert.";
         connect(currentPort_, &QSerialPort::readyRead, this, &SerialPortController::onReadyRead);
         currentPort_->setBaudRate(QSerialPort::Baud115200);
         currentPort_->setDataBits(QSerialPort::Data8);
@@ -82,10 +83,10 @@ void SerialPortController::internalWriteDataOnPort(QByteArray data)
     }
 }
 
-void SerialPortController::closePort()
+void SerialPortController::internalClosePort()
 {
     if(currentPort_) {
-        qDebug() << "Fermeture du port";
+        qInfo() << "Fermeture du port";
         currentPort_->close();
     }
 }
@@ -96,9 +97,9 @@ void SerialPortController::onReadyRead()
     //Gère la ré-entrance de la fonction
     QMutexLocker lock(&readMutex_);
 
-    qDebug() << "Données reçues sur le port " << currentPort_->portName();    
+    qInfo() << "Données reçues sur le port " << currentPort_->portName();    
     QByteArray data = currentPort_->readAll();
-    qDebug() << " >>> (hexa)" << DebugHelper::byteArrayToString(data);
-    qDebug() << " >>> (raw)" << data;
+    qInfo() << " >>> (hexa)" << DebugHelper::byteArrayToString(data);
+    qInfo() << " >>> (raw)" << data;
     emit dataReceived(data);
 }

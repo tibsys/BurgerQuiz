@@ -29,26 +29,26 @@ bool GameController::isReady() const {
 
 void GameController::initialize()
 {
-    qDebug() << "Démarrage du jeu Burger Quiz";
+    qInfo() << "Démarrage du jeu Burger Quiz";
 
-    qDebug() << "Etape 1 : recherche des dispositifs burger";
+    qInfo() << "Etape 1 : recherche des dispositifs burger";
     burger1_->findBurger();
 }
 
 void GameController::onBurgerReady()
 {
     BurgerController *ctrl = qobject_cast<BurgerController*>(QObject::sender());
-    qDebug() << "Le burger de l'équipe " << DebugHelper::teamToString(ctrl->team()) << " est prêt";
+    qInfo() << "Le burger de l'équipe " << DebugHelper::teamToString(ctrl->team()) << " est prêt";
     Burger burger = ctrl->burger();
     emit burgerInitialized(burger.team());
 
-    qDebug() << "Clignotement de la LED du burger";
+    qInfo() << "Clignotement de la LED du burger";
     ctrl->startBlinking();
 
     if(initializedBurgersCount() < 2) {        
         QTimer::singleShot(5000, this, SLOT(findSecondBurger()));
     } else {
-        qDebug() << "Tous les burgers sont initialisés. Le jeu peut commencer";
+        qInfo() << "Tous les burgers sont initialisés. Le jeu peut commencer";
         emit gameReady();
 
         gameState_ = INITIALIZED;
@@ -57,7 +57,7 @@ void GameController::onBurgerReady()
 
 void GameController::findSecondBurger()
 {
-    qDebug() << "Recherche du second burger";
+    qInfo() << "Recherche du second burger";
     burger2_->findBurger();
 }
 
@@ -70,27 +70,27 @@ void GameController::onButtonPressed()
     QSound::play(":/sounds/buzz.wav");
 
     if(gameState_ == TEAM_SELECTED) {
-        qDebug() << "Vous avez buzzé trop tard...";
+        qInfo() << "Vous avez buzzé trop tard...";
         return;
     }
 
     if(gameState_ != SELECTION) {
-        qDebug() << "Vous avez buzzé trop top, attendez que la sélection commence";
+        qInfo() << "Vous avez buzzé trop top, attendez que la sélection commence";
         return;
     }
 
     QMutexLocker lock(&arbitreMutex_); //On fait tout dans une section critique
 
     BurgerController *ctrl = qobject_cast<BurgerController*>(QObject::sender());
-    qDebug() << "Le burger de l'équipe " << DebugHelper::teamToString(ctrl->team()) << " a buzzé !";
+    qInfo() << "Le burger de l'équipe " << DebugHelper::teamToString(ctrl->team()) << " a buzzé !";
 
     //Activation de l'automate des burgers
     Burger selectionne = ctrl->burger();
     Burger elimine = (ctrl->burger().team() == burger1_->team() ? burger2_->burger() : burger1_->burger());
 
-    qDebug() << "Resultat de l'arbitrage : ";
-    qDebug() << "Sélectionné : " << DebugHelper::teamToString(selectionne.team());
-    qDebug() << "Eliminé : " << DebugHelper::teamToString(elimine.team());
+    qInfo() << "Resultat de l'arbitrage : ";
+    qInfo() << "Sélectionné : " << DebugHelper::teamToString(selectionne.team());
+    qInfo() << "Eliminé : " << DebugHelper::teamToString(elimine.team());
 
     gameState_ = TEAM_SELECTED;
     emit burgerSelected(selectionne.team());
@@ -100,5 +100,5 @@ void GameController::onButtonPressed()
 
 void GameController::onGameStateChanged()
 {
-    qDebug() << "L'état du jeu a changé";
+    qInfo() << "L'état du jeu a changé";
 }
