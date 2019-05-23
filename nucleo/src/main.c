@@ -3,8 +3,9 @@
   * @file    main.c
   * @author  Ac6
   * @version V1.0
-  * @date    01-December-2013
-  * @brief   Default main function.
+  * @date    08-October-2018
+  * @brief   BurgerQuizz main file.
+  * This application is designed in the field of Qt courses. Two embedded systems (aka 'burgers') are plugged to the computer where an application ask questions to the users.
   ******************************************************************************
 */
 #include "stm32f1xx_hal.h"
@@ -40,10 +41,7 @@ int main(void)
 	{
 		BURGER_DIALOG_process_main();
 		BUTTON_process_main();
-
-
 	}
-
 }
 
 
