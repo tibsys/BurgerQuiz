@@ -10,6 +10,8 @@ RESOURCES += qml.qrc
 DISTFILES += \
     BurgerQuiz.pri
 
+DESTDIR = $$PWD/../../bin.nosync/
+
 include(BurgerQuiz.pri)
 
 FORMS += \

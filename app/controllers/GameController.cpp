@@ -69,6 +69,8 @@ void GameController::onButtonPressed()
     //On joue tout de suite un son, peu importe l'état du jeu
     QSound::play(":/sounds/buzz.wav");
 
+    QMutexLocker lock(&arbitreMutex_); //On fait tout dans une section critique
+
     if(gameState_ == TEAM_SELECTED) {
         qInfo() << "Vous avez buzzé trop tard...";
         return;
@@ -77,9 +79,7 @@ void GameController::onButtonPressed()
     if(gameState_ != SELECTION) {
         qInfo() << "Vous avez buzzé trop top, attendez que la sélection commence";
         return;
-    }
-
-    QMutexLocker lock(&arbitreMutex_); //On fait tout dans une section critique
+    }    
 
     BurgerController *ctrl = qobject_cast<BurgerController*>(QObject::sender());
     qInfo() << "Le burger de l'équipe " << DebugHelper::teamToString(ctrl->team()) << " a buzzé !";
