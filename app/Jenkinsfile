@@ -31,6 +31,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
     stages {						
         stage('Build & analysis') {			
 			steps {
+				dir('app') {
 				//Update the job description
 				script { 
 					def setDescription = { 
@@ -56,6 +57,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 
 				//stash includes: 'BurgerQuiz', name: 'bin'
 				archiveArtifacts artifacts: 'BurgerQuiz'
+				}
 			}
 		}
 		stage("Tests & coverage") {			
@@ -63,7 +65,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 				//Build in Debug with coverage
 				echo "Starting build for Linux 64 bit with Qt 5.10 and GCC"				
 
-				dir('tests') {
+				dir('app/tests') {
 					echo "Calling qmake"
 					sh 'qmake CONFIG+=debug CONFIG+=coverage'
 					
@@ -107,6 +109,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 		}
 		stage("Documentation") {
 			steps {
+				dir('app') {
 				echo "Generate documentation"
 				sh 'doxygen documentation/doxy'
 
@@ -120,6 +123,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					reportName: 'Doxygen documentation',
 					includes: "**/*"
 				]
+				}
 			}
 		} 
 	}
