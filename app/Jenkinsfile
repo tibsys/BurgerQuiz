@@ -65,7 +65,8 @@ This project is dedicated to training only. None of the graphics are owned by ti
 				//Build in Debug with coverage
 				echo "Starting build for Linux 64 bit with Qt 5.10 and GCC"				
 
-				dir('app/tests') {
+				dir('app') {
+					dir('tests') {
 					echo "Calling qmake"
 					sh 'qmake CONFIG+=debug CONFIG+=coverage'
 					
@@ -88,7 +89,7 @@ This project is dedicated to training only. None of the graphics are owned by ti
 							[$class: 'QTestLibType', pattern: '**/testresults.xml']
 						]
 					])	
-				}
+					}
 
 				echo "Analyse coverage"				
 				sh 'chmod +x coverage/coverage.sh'
@@ -104,7 +105,8 @@ This project is dedicated to training only. None of the graphics are owned by ti
 					reportFiles: 'index.html',
 					reportName: 'Coverage report',
 					includes: "**/*"
-				]				
+				]	
+				}			
 			}
 		}
 		stage("Documentation") {
